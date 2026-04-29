@@ -150,12 +150,21 @@ class BluetoothHidCore(
 
     // ---- Send Report ----
 
+    private fun sendAndroidReport(
+        hidDevice: BluetoothHidDevice,
+        device: BluetoothDevice,
+        id: Int,
+        bytes: ByteArray
+    ): Boolean {
+        return hidDevice.sendReport(device, id, bytes)
+    }
+
     fun sendReport(id: Int, bytes: ByteArray): Boolean {
         var success = false
         bluetoothDevice?.let { device ->
             bluetoothHidDevice?.let { hidDevice ->
                 if (checkBluetoothConnectPermission(context)) {
-                    success = hidDevice.sendReport(device, id, bytes)
+                    success = sendAndroidReport(hidDevice, device, id, bytes)
                 }
             }
         }
@@ -173,17 +182,17 @@ class BluetoothHidCore(
                 if (checkBluetoothConnectPermission(context)) {
                     success = true
                     text.forEach {
-                        if(!hidDevice.sendReport(device, KEYBOARD_REPORT_ID, virtualKeyboardLayout.getKeyboardKey(it))) {
+                        if(!sendAndroidReport(hidDevice, device, KEYBOARD_REPORT_ID, virtualKeyboardLayout.getKeyboardKey(it))) {
                             success = false
                         }
                         delay(DELAY_BETWEEN_KEY_PRESSES_IN_MILLIS)
-                        hidDevice.sendReport(device, KEYBOARD_REPORT_ID, REMOTE_INPUT_NONE)
+                        sendAndroidReport(hidDevice, device, KEYBOARD_REPORT_ID, REMOTE_INPUT_NONE)
                         delay(DELAY_BETWEEN_KEY_PRESSES_IN_MILLIS)
                     }
                     if(shouldSendEnter) {
-                        hidDevice.sendReport(device, KEYBOARD_REPORT_ID, RemoteButtonProperties.KeyboardEnterButton.input)
+                        sendAndroidReport(hidDevice, device, KEYBOARD_REPORT_ID, RemoteButtonProperties.KeyboardEnterButton.input)
                         delay(DELAY_BETWEEN_KEY_PRESSES_IN_MILLIS)
-                        hidDevice.sendReport(device, KEYBOARD_REPORT_ID, REMOTE_INPUT_NONE)
+                        sendAndroidReport(hidDevice, device, KEYBOARD_REPORT_ID, REMOTE_INPUT_NONE)
                     }
                 }
             }
