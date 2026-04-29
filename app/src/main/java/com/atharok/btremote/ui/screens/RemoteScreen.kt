@@ -460,7 +460,8 @@ private fun KeyboardModalBottomSheet(
             sendTextReport = { text: String, shouldSendEnter: Boolean ->
                 sendTextReport(text, virtualKeyboardLayout, shouldSendEnter)
             },
-            onShowKeyboardBottomSheetChanged = onShowKeyboardChanged
+            onShowKeyboardBottomSheetChanged = onShowKeyboardChanged,
+            virtualKeyboardLayout = virtualKeyboardLayout
         )
     }
 }

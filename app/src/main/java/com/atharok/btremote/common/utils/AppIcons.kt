@@ -5,6 +5,7 @@ import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.automirrored.rounded.Backspace
 import androidx.compose.material.icons.automirrored.rounded.BluetoothSearching
 import androidx.compose.material.icons.automirrored.rounded.HelpOutline
+import androidx.compose.material.icons.automirrored.rounded.Input
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.rounded.KeyboardReturn
@@ -165,6 +166,7 @@ object AppIcons {
     val KeyboardPageDown get() = Icons.Rounded.KeyboardDoubleArrowDown
 
     val Send get() = Icons.AutoMirrored.Rounded.Send
+    val Input get() = Icons.AutoMirrored.Rounded.Input
 
     // ---- Mouse ----
 
