@@ -1,6 +1,12 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+}
+
+val localProps = Properties().apply {
+    rootProject.file("local.properties").takeIf { it.exists() }?.inputStream()?.use { load(it) }
 }
 
 android {
@@ -24,10 +30,10 @@ android {
 
     signingConfigs {
         create("release") {
-            System.getenv("ANDROID_KEY_STORE_FILE")?.let { storeFile = file(it) }
-            System.getenv("ANDROID_KEY_STORE_PASSWORD")?.let { storePassword = it }
-            System.getenv("ANDROID_KEY_ALIAS")?.let { keyAlias = it }
-            System.getenv("ANDROID_KEY_PASSWORD")?.let { keyPassword = it }
+            localProps.getProperty("storeFile")?.let { storeFile = file(it) }
+            localProps.getProperty("storePassword")?.let { storePassword = it }
+            localProps.getProperty("keyAlias")?.let { keyAlias = it }
+            localProps.getProperty("keyPassword")?.let { keyPassword = it }
         }
     }
 
@@ -72,6 +78,9 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+        jniLibs {
+            keepDebugSymbols += "**/*.so"
         }
     }
 
