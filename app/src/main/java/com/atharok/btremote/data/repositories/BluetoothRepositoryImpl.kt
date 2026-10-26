@@ -86,8 +86,9 @@ class BluetoothRepositoryImpl(
     override suspend fun sendTextReport(
         text: String,
         virtualKeyboardLayout: VirtualKeyboardLayout,
-        shouldSendEnter: Boolean
+        shouldSendEnter: Boolean,
+        delayBetweenKeysMillis: Long
     ): Boolean {
-        return bluetoothHidCore.sendTextReport(text, virtualKeyboardLayout, shouldSendEnter)
+        return bluetoothHidCore.sendTextReport(text, virtualKeyboardLayout, shouldSendEnter, delayBetweenKeysMillis)
     }
 }

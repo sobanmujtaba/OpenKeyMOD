@@ -174,7 +174,8 @@ class BluetoothHidCore(
     suspend fun sendTextReport(
         text: String,
         virtualKeyboardLayout: VirtualKeyboardLayout,
-        shouldSendEnter: Boolean
+        shouldSendEnter: Boolean,
+        delayBetweenKeysMillis: Long = DELAY_BETWEEN_KEY_PRESSES_IN_MILLIS
     ): Boolean {
         var success = false
         bluetoothDevice?.let { device ->
@@ -185,13 +186,13 @@ class BluetoothHidCore(
                         if(!sendAndroidReport(hidDevice, device, KEYBOARD_REPORT_ID, virtualKeyboardLayout.getKeyboardKey(it))) {
                             success = false
                         }
-                        delay(DELAY_BETWEEN_KEY_PRESSES_IN_MILLIS)
+                        delay(delayBetweenKeysMillis)
                         sendAndroidReport(hidDevice, device, KEYBOARD_REPORT_ID, REMOTE_INPUT_NONE)
-                        delay(DELAY_BETWEEN_KEY_PRESSES_IN_MILLIS)
+                        delay(delayBetweenKeysMillis)
                     }
                     if(shouldSendEnter) {
                         sendAndroidReport(hidDevice, device, KEYBOARD_REPORT_ID, RemoteButtonProperties.KeyboardEnterButton.input)
-                        delay(DELAY_BETWEEN_KEY_PRESSES_IN_MILLIS)
+                        delay(delayBetweenKeysMillis)
                         sendAndroidReport(hidDevice, device, KEYBOARD_REPORT_ID, REMOTE_INPUT_NONE)
                     }
                 }

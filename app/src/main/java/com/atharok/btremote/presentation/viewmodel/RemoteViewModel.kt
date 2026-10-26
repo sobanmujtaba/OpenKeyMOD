@@ -2,15 +2,18 @@ package com.atharok.btremote.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.atharok.btremote.common.utils.DELAY_BETWEEN_KEY_PRESSES_IN_MILLIS
 import com.atharok.btremote.common.utils.KEYBOARD_REPORT_ID
 import com.atharok.btremote.common.utils.MOUSE_REPORT_ID
 import com.atharok.btremote.common.utils.REMOTE_REPORT_ID
 import com.atharok.btremote.domain.entities.remoteInput.MouseAction
+import com.atharok.btremote.domain.entities.remoteInput.keyboard.SysadminMacro
 import com.atharok.btremote.domain.entities.remoteInput.keyboard.virtualKeyboard.VirtualKeyboardLayout
 import com.atharok.btremote.domain.entities.settings.RemoteSettings
 import com.atharok.btremote.domain.usecases.RemoteUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
@@ -21,7 +24,7 @@ class RemoteViewModel(
 
     // ---- Settings ----
 
-    val remoteSettingsFlow: Flow<RemoteSettings> = useCase.remoteSettingsFlow
+    val remoteSettingsFlow: Flow<RemoteSettings> get() = useCase.remoteSettingsFlow
 
     // ---- Connection ----
 
@@ -47,12 +50,31 @@ class RemoteViewModel(
     // Keyboard
     val sendKeyboardReport: (ByteArray) -> Unit = { bytes -> sendReport(KEYBOARD_REPORT_ID, bytes) }
 
+    // Macro
+    fun sendMacro(macro: SysadminMacro) {
+        sendKeyboardReport(macro.pressedBytes)
+        viewModelScope.launch(Dispatchers.Default) {
+            delay(DELAY_BETWEEN_KEY_PRESSES_IN_MILLIS)
+            sendKeyboardReport(macro.releasedBytes)
+        }
+    }
+
     // Text (Keyboard)
     private var sendTextJob: Job? = null
+
     val sendTextReport: (String, VirtualKeyboardLayout, Boolean) -> Unit = { text, virtualKeyboardLayout, shouldSendEnter ->
+        sendText(text, virtualKeyboardLayout, shouldSendEnter, DELAY_BETWEEN_KEY_PRESSES_IN_MILLIS)
+    }
+
+    fun sendText(
+        text: String,
+        virtualKeyboardLayout: VirtualKeyboardLayout,
+        shouldSendEnter: Boolean = false,
+        delayMillis: Long = DELAY_BETWEEN_KEY_PRESSES_IN_MILLIS
+    ) {
         if(sendTextJob?.isActive != true) {
             sendTextJob = viewModelScope.launch(Dispatchers.Default) {
-                useCase.sendTextReport(text, virtualKeyboardLayout, shouldSendEnter)
+                useCase.sendTextReport(text, virtualKeyboardLayout, shouldSendEnter, delayMillis)
             }
         }
     }

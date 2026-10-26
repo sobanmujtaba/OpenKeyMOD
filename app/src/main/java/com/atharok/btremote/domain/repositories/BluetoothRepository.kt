@@ -1,6 +1,7 @@
 package com.atharok.btremote.domain.repositories
 
 import androidx.compose.runtime.snapshots.SnapshotStateList
+import com.atharok.btremote.common.utils.DELAY_BETWEEN_KEY_PRESSES_IN_MILLIS
 import com.atharok.btremote.domain.entities.DeviceEntity
 import com.atharok.btremote.domain.entities.DeviceHidConnectionState
 import com.atharok.btremote.domain.entities.remoteInput.keyboard.virtualKeyboard.VirtualKeyboardLayout
@@ -49,6 +50,7 @@ interface BluetoothRepository {
     suspend fun sendTextReport(
         text: String,
         virtualKeyboardLayout: VirtualKeyboardLayout,
-        shouldSendEnter: Boolean
+        shouldSendEnter: Boolean,
+        delayBetweenKeysMillis: Long = DELAY_BETWEEN_KEY_PRESSES_IN_MILLIS
     ): Boolean
 }

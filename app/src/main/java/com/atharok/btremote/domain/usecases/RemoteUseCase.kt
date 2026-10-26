@@ -30,8 +30,9 @@ class RemoteUseCase(
     suspend fun sendTextReport(
         text: String,
         virtualKeyboardLayout: VirtualKeyboardLayout,
-        shouldSendEnter: Boolean
+        shouldSendEnter: Boolean,
+        delayBetweenKeysMillis: Long = com.atharok.btremote.common.utils.DELAY_BETWEEN_KEY_PRESSES_IN_MILLIS
     ): Boolean {
-        return bluetoothRepository.sendTextReport(text, virtualKeyboardLayout, shouldSendEnter)
+        return bluetoothRepository.sendTextReport(text, virtualKeyboardLayout, shouldSendEnter, delayBetweenKeysMillis)
     }
 }

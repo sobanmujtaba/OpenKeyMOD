@@ -59,6 +59,9 @@ import com.atharok.btremote.ui.theme.surfaceElevationMedium
 import com.atharok.btremote.ui.views.RemoteScreenHelpModalBottomSheet
 import com.atharok.btremote.ui.views.keyboard.AdvancedKeyboard
 import com.atharok.btremote.ui.views.keyboard.AdvancedKeyboardModalBottomSheet
+import com.atharok.btremote.ui.views.keyboard.ComposeAndSendModalBottomSheet
+import com.atharok.btremote.ui.views.keyboard.PresentationModeModalBottomSheet
+import com.atharok.btremote.ui.views.keyboard.SysadminMacroModalBottomSheet
 import com.atharok.btremote.ui.views.keyboard.VirtualKeyboardModalBottomSheet
 import com.atharok.btremote.ui.views.mouse.MousePadLayout
 import com.atharok.btremote.ui.views.remote.MinimalistRemoteView
@@ -94,6 +97,11 @@ fun RemoteScreen(
     // Keyboard
     var isKeyboardVisible: Boolean by rememberSaveable { mutableStateOf(false) }
 
+    // OpenKeyMOD Features
+    var isComposeAndSendVisible: Boolean by rememberSaveable { mutableStateOf(false) }
+    var isSysadminMacroVisible: Boolean by rememberSaveable { mutableStateOf(false) }
+    var isPresentationModeVisible: Boolean by rememberSaveable { mutableStateOf(false) }
+
     // More Buttons
     var isMoreButtonsVisible: Boolean by rememberSaveable { mutableStateOf(false) }
 
@@ -122,6 +130,9 @@ fun RemoteScreen(
                 useAdvancedKeyboardIntegrated = remoteSettings.useAdvancedKeyboard && remoteSettings.useAdvancedKeyboardIntegrated,
                 isKeyboardVisible = isKeyboardVisible,
                 onKeyboardVisibleChanged = { isKeyboardVisible = it },
+                onComposeAndSendClick = { isComposeAndSendVisible = true },
+                onSysadminMacroClick = { isSysadminMacroVisible = true },
+                onPresentationModeClick = { isPresentationModeVisible = true },
                 isMoreButtonsVisible = isMoreButtonsVisible,
                 onMoreButtonsVisibleChanged = { isMoreButtonsVisible = it },
                 isHelpBottomSheetVisible = isHelpBottomSheetVisible,
@@ -175,6 +186,37 @@ fun RemoteScreen(
                         sendKeyboardKeyReport = remoteViewModel.sendKeyboardReport,
                         sendTextReport = remoteViewModel.sendTextReport,
                         onShowKeyboardChanged = { isKeyboardVisible = it }
+                    )
+                }
+                isComposeAndSendVisible -> {
+                    val virtualKeyboardLayout = remember(remoteSettings.keyboardLanguage) {
+                        getKeyboardLayout(remoteSettings.keyboardLanguage)
+                    }
+                    ComposeAndSendModalBottomSheet(
+                        virtualKeyboardLayout = virtualKeyboardLayout,
+                        onSendText = { text, enter, delayMs ->
+                            remoteViewModel.sendText(text, virtualKeyboardLayout, enter, delayMs)
+                        },
+                        onDismissRequest = { isComposeAndSendVisible = false }
+                    )
+                }
+                isSysadminMacroVisible -> {
+                    SysadminMacroModalBottomSheet(
+                        onSendMacro = { macro ->
+                            remoteViewModel.sendMacro(macro)
+                        },
+                        onSendKey = { bytes ->
+                            remoteViewModel.sendKeyboardReport(bytes)
+                        },
+                        onDismissRequest = { isSysadminMacroVisible = false }
+                    )
+                }
+                isPresentationModeVisible -> {
+                    PresentationModeModalBottomSheet(
+                        onSendKey = { bytes ->
+                            remoteViewModel.sendKeyboardReport(bytes)
+                        },
+                        onDismissRequest = { isPresentationModeVisible = false }
                     )
                 }
                 isMoreButtonsVisible -> {
@@ -475,6 +517,9 @@ private fun TopBarActions(
     useAdvancedKeyboardIntegrated: Boolean,
     isKeyboardVisible: Boolean,
     onKeyboardVisibleChanged: (Boolean) -> Unit,
+    onComposeAndSendClick: () -> Unit,
+    onSysadminMacroClick: () -> Unit,
+    onPresentationModeClick: () -> Unit,
     isMoreButtonsVisible: Boolean,
     onMoreButtonsVisibleChanged: (Boolean) -> Unit,
     isHelpBottomSheetVisible: Boolean,
@@ -536,6 +581,36 @@ private fun TopBarActions(
     }
 
     MoreOverflowMenu { closeDropdownMenu: () -> Unit ->
+
+        // Compose & Send (OpenKeyMOD / KeyMOD Pro)
+        BasicDropdownMenuItem(
+            text = "Compose & Send",
+            icon = AppIcons.Send,
+            onClick = {
+                closeDropdownMenu()
+                onComposeAndSendClick()
+            }
+        )
+
+        // Sysadmin Macros
+        BasicDropdownMenuItem(
+            text = "Macros & F-Keys",
+            icon = AppIcons.Computer,
+            onClick = {
+                closeDropdownMenu()
+                onSysadminMacroClick()
+            }
+        )
+
+        // Presentation Remote
+        BasicDropdownMenuItem(
+            text = "Presentation Remote",
+            icon = AppIcons.PlayArrow,
+            onClick = {
+                closeDropdownMenu()
+                onPresentationModeClick()
+            }
+        )
 
         // More Buttons
         BasicDropdownMenuItem(
