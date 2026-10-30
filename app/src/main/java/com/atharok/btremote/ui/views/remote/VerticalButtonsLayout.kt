@@ -2,18 +2,15 @@ package com.atharok.btremote.ui.views.remote
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import com.atharok.btremote.domain.entities.remoteInput.RemoteButtonProperties
-import com.atharok.btremote.ui.components.DefaultElevatedCard
-import com.atharok.btremote.ui.components.customButtons.RemoteIconRawButton
-import com.atharok.btremote.ui.theme.surfaceElevationMedium
+import com.atharok.btremote.ui.components.customButtons.RemoteIconSurfaceButton
 
 @Composable
 fun VerticalButtonsLayout(
@@ -21,42 +18,28 @@ fun VerticalButtonsLayout(
     bottomButtonProperties: RemoteButtonProperties,
     sendRemoteKeyReport: (ByteArray) -> Unit,
     modifier: Modifier = Modifier,
-    shape: Shape = RectangleShape,
-    elevation: Dp = surfaceElevationMedium()
+    shape: Shape = RoundedCornerShape(14.dp)
 ) {
-    DefaultElevatedCard(
-        modifier = modifier,
-        shape = shape,
-        elevation = elevation
+    Column(
+        modifier = modifier.fillMaxHeight(),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Column(
-            modifier = Modifier.fillMaxHeight(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween
-        ) {
-            RemoteIconRawButton(
-                properties = topButtonProperties,
-                sendKeyReport = sendRemoteKeyReport,
-                modifier = Modifier
-                    .aspectRatio(1f)
-                    .weight(
-                        weight = 1f,
-                        fill = false
-                    ),
-                shape = shape
-            )
+        RemoteIconSurfaceButton(
+            properties = topButtonProperties,
+            sendKeyReport = sendRemoteKeyReport,
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
+            shape = shape
+        )
 
-            RemoteIconRawButton(
-                properties = bottomButtonProperties,
-                sendKeyReport = sendRemoteKeyReport,
-                modifier = Modifier
-                    .aspectRatio(1f)
-                    .weight(
-                        weight = 1f,
-                        fill = false
-                    ),
-                shape = shape
-            )
-        }
+        RemoteIconSurfaceButton(
+            properties = bottomButtonProperties,
+            sendKeyReport = sendRemoteKeyReport,
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
+            shape = shape
+        )
     }
 }

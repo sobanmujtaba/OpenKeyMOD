@@ -8,6 +8,7 @@ abstract class VirtualKeyboardLayout {
     companion object {
         val KEYBOARD_KEY_ENTER = byteArrayOf(0x00, KeyboardKey.KEY_ENTER.byte)
         val KEYBOARD_KEY_TAB = byteArrayOf(0x00, KeyboardKey.KEY_TAB.byte)
+        val KEYBOARD_KEY_BACKSPACE = byteArrayOf(0x00, KeyboardKey.KEY_BACKSPACE.byte)
         val KEYBOARD_KEY_DELETE = byteArrayOf(0x00, KeyboardKey.KEY_DELETE.byte)
         val KEYBOARD_KEY_ESCAPE = byteArrayOf(0x00, KeyboardKey.KEY_ESCAPE.byte)
     }

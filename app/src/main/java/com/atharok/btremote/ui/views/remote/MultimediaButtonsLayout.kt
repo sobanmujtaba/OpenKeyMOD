@@ -2,58 +2,59 @@ package com.atharok.btremote.ui.views.remote
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import com.atharok.btremote.domain.entities.remoteInput.RemoteButtonProperties
-import com.atharok.btremote.ui.components.DefaultElevatedCard
-import com.atharok.btremote.ui.components.customButtons.RemoteIconRawButton
-import com.atharok.btremote.ui.theme.surfaceElevationMedium
+import com.atharok.btremote.ui.components.customButtons.RemoteIconSurfaceButton
+import com.atharok.btremote.ui.theme.OkmGlass
 
 @Composable
 fun MultimediaButtonsLayout(
     sendRemoteKeyReport: (ByteArray) -> Unit,
     modifier: Modifier = Modifier,
-    shape: Shape = RectangleShape,
-    elevation: Dp = surfaceElevationMedium()
+    shape: Shape = RoundedCornerShape(14.dp)
 ) {
-    DefaultElevatedCard(
-        modifier = modifier,
-        shape = shape,
-        elevation = elevation
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Absolute.SpaceAround,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            RemoteIconRawButton(
-                properties = RemoteButtonProperties.RewindButton,
-                sendKeyReport = sendRemoteKeyReport,
-                modifier = Modifier.weight(24f),
-                shape = shape,
-                iconFillFraction = 0.6f
-            )
+    val palette = OkmGlass.palette()
 
-            RemoteIconRawButton(
-                properties = RemoteButtonProperties.PlayPauseButton,
-                sendKeyReport = sendRemoteKeyReport,
-                modifier = Modifier.weight(40f),
-                shape = shape,
-                iconFillFraction = 0.6f
-            )
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+   ) {
+        RemoteIconSurfaceButton(
+            properties = RemoteButtonProperties.RewindButton,
+            sendKeyReport = sendRemoteKeyReport,
+            modifier = Modifier
+                .fillMaxHeight()
+                .weight(1f),
+            shape = shape,
+            iconFillFraction = 0.36f
+        )
 
-            RemoteIconRawButton(
-                properties = RemoteButtonProperties.ForwardButton,
-                sendKeyReport = sendRemoteKeyReport,
-                modifier = Modifier.weight(24f),
-                shape = shape,
-                iconFillFraction = 0.6f
-            )
-        }
+        RemoteIconSurfaceButton(
+            properties = RemoteButtonProperties.PlayPauseButton,
+            sendKeyReport = sendRemoteKeyReport,
+            modifier = Modifier
+                .fillMaxHeight()
+                .weight(1.35f),
+            shape = shape,
+            fill = palette.accent.copy(alpha = if(palette.dark) 0.16f else 0.10f),
+            iconFillFraction = 0.36f,
+            iconTint = palette.accent
+        )
+
+        RemoteIconSurfaceButton(
+            properties = RemoteButtonProperties.ForwardButton,
+            sendKeyReport = sendRemoteKeyReport,
+            modifier = Modifier
+                .fillMaxHeight()
+                .weight(1f),
+            shape = shape,
+            iconFillFraction = 0.36f
+        )
     }
 }

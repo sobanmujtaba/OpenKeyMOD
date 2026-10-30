@@ -10,17 +10,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AssistChip
-import androidx.compose.material3.Button
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,167 +30,270 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalClipboardManager
-import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.atharok.btremote.R
 import com.atharok.btremote.domain.entities.remoteInput.keyboard.virtualKeyboard.VirtualKeyboardLayout
 import com.atharok.btremote.domain.entities.runbook.RunbookSnippet
+import com.atharok.btremote.ui.components.OkmColors
+import com.atharok.btremote.ui.components.OkmTypography
+import com.atharok.btremote.ui.components.OpenKeyModBottomSheet
+import com.atharok.btremote.ui.components.OpenKeyModCard
+import com.atharok.btremote.ui.components.OpenKeyModPrimaryButton
+import com.atharok.btremote.ui.components.OpenKeyModSectionLabel
+import com.atharok.btremote.ui.components.OpenKeyModSegmentedControl
+import com.atharok.btremote.ui.components.OpenKeyModSheetContent
+import com.atharok.btremote.ui.components.OpenKeyModSheetHeader
+import com.atharok.btremote.ui.components.okmSwitchColors
+import kotlin.math.abs
 
 /**
- * Compose & Send Modal Bottom Sheet (OpenKeyMOD / Openterface KM Pro feature).
- * Enables multi-line composition, clipboard pasting, typing speed control, and runbook quick-triggers.
+ * Compose & Send (OpenKeyMOD / KeyMOD Pro).
+ * Multi-line composition, clipboard handoff, snippet shortcuts, and pacing.
  */
 @Composable
 fun ComposeAndSendModalBottomSheet(
     virtualKeyboardLayout: VirtualKeyboardLayout,
+    snippets: List<RunbookSnippet>,
     onSendText: (text: String, shouldSendEnter: Boolean, delayMs: Long) -> Unit,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    KeyboardModalBottomSheet(
-        onShowKeyboardBottomSheetChanged = { onDismissRequest() },
+    val clipboardManager = LocalClipboardManager.current
+    var textContent by remember { mutableStateOf("") }
+    var autoSendEnter by remember { mutableStateOf(true) }
+    var delayMillis by remember { mutableFloatStateOf(25f) }
+
+    val speedOptions = listOf(80L, 40L, 15L)
+    val selectedSpeed = speedOptions.minByOrNull { abs(it - delayMillis.toLong()) } ?: 40L
+    val speedLabels = mapOf(
+        80L to stringResource(id = R.string.okm_speed_slow),
+        40L to stringResource(id = R.string.okm_speed_balanced),
+        15L to stringResource(id = R.string.okm_speed_fast)
+    )
+
+    OpenKeyModBottomSheet(
+        onDismissRequest = onDismissRequest,
         windowInsets = WindowInsets.ime,
         modifier = modifier
     ) {
-        val clipboardManager = LocalClipboardManager.current
-        var textContent by remember { mutableStateOf("") }
-        var autoSendEnter by remember { mutableStateOf(true) }
-        var delayMillis by remember { mutableFloatStateOf(25f) }
-        val snippets = remember { RunbookSnippet.defaultSnippets() }
-
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = dimensionResource(id = R.dimen.padding_large))
-                .padding(bottom = dimensionResource(id = R.dimen.padding_large))
-                .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            // Header
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Compose & Send (KM Pro)",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.primary
-                )
-
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    OutlinedButton(
-                        onClick = {
-                            clipboardManager.getText()?.text?.let { clipboardText ->
-                                textContent = if (textContent.isEmpty()) clipboardText else "$textContent\n$clipboardText"
-                            }
-                        },
-                        shape = RoundedCornerShape(8.dp)
-                    ) {
-                        Text(text = "Paste")
-                    }
-
-                    OutlinedButton(
-                        onClick = { textContent = "" },
-                        shape = RoundedCornerShape(8.dp)
-                    ) {
-                        Text(text = "Clear")
-                    }
-                }
-            }
-
-            // Quick Runbook Snippets row
-            Text(
-                text = "Runbook Quick Snippets:",
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+        OpenKeyModSheetContent {
+            OpenKeyModSheetHeader(
+                eyebrow = stringResource(id = R.string.okm_eyebrow),
+                title = stringResource(id = R.string.okm_compose_title),
+                subtitle = stringResource(id = R.string.okm_compose_subtitle),
+                onDismissRequest = onDismissRequest
             )
 
+            Spacer(modifier = Modifier.height(20.dp))
+
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .horizontalScroll(rememberScrollState()),
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                snippets.forEach { snippet ->
-                    AssistChip(
-                        onClick = {
-                            textContent = snippet.command
-                            autoSendEnter = snippet.autoEnter
-                            delayMillis = snippet.delayMs.toFloat()
-                        },
-                        label = { Text(snippet.title) }
+                Surface(
+                    onClick = {
+                        clipboardManager.getText()?.text?.let { clipboardText ->
+                            textContent = if (textContent.isEmpty()) {
+                                clipboardText
+                            } else {
+                                "$textContent\n$clipboardText"
+                            }
+                        }
+                    },
+                    shape = CircleShape,
+                    color = OkmColors.card(),
+                    contentColor = MaterialTheme.colorScheme.onSurface
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.okm_paste),
+                        modifier = Modifier.padding(horizontal = 18.dp, vertical = 10.dp),
+                        style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+                    )
+                }
+
+                Surface(
+                    onClick = { textContent = "" },
+                    shape = CircleShape,
+                    color = OkmColors.card(),
+                    contentColor = OkmColors.secondaryText()
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.okm_clear),
+                        modifier = Modifier.padding(horizontal = 18.dp, vertical = 10.dp),
+                        style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
                     )
                 }
             }
 
-            // Text input area
-            OutlinedTextField(
-                value = textContent,
-                onValueChange = { textContent = it },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(140.dp),
-                placeholder = { Text("Draft or paste text, terminal scripts, passwords, or BIOS commands...") },
-                maxLines = 10,
-                shape = RoundedCornerShape(12.dp)
-            )
+            Spacer(modifier = Modifier.height(18.dp))
 
-            // Auto Enter & Delay controls
-            Row(
+            OpenKeyModCard(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                contentPadding = 14.dp
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                OutlinedTextField(
+                    value = textContent,
+                    onValueChange = { textContent = it },
+                    modifier = Modifier.fillMaxWidth(),
+                    placeholder = {
+                        Text(
+                            text = stringResource(id = R.string.okm_compose_placeholder),
+                            color = OkmColors.secondaryText()
+                        )
+                    },
+                    minLines = 5,
+                    maxLines = 10,
+                    shape = RoundedCornerShape(16.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedContainerColor = OkmColors.card(),
+                        unfocusedContainerColor = OkmColors.card(),
+                        focusedBorderColor = OkmColors.accent().copy(alpha = 0.55f),
+                        unfocusedBorderColor = OkmColors.separator().copy(alpha = 0.55f),
+                        cursorColor = OkmColors.accent()
+                    )
+                )
+            }
+
+            Spacer(modifier = Modifier.height(18.dp))
+
+            OpenKeyModSectionLabel(text = stringResource(id = R.string.okm_quick_snippets))
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = stringResource(id = R.string.okm_snippet_hint),
+                style = OkmTypography.sheetSubtitle,
+                color = OkmColors.secondaryText()
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+
+            if (snippets.isEmpty()) {
+                Text(
+                    text = stringResource(id = R.string.okm_no_snippets),
+                    style = OkmTypography.sheetSubtitle,
+                    color = OkmColors.secondaryText()
+                )
+            } else {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    snippets.forEach { snippet ->
+                        Surface(
+                            onClick = {
+                                textContent = snippet.command
+                                autoSendEnter = snippet.autoEnter
+                                delayMillis = snippet.delayMs.toFloat()
+                            },
+                            shape = CircleShape,
+                            color = OkmColors.card(),
+                            contentColor = MaterialTheme.colorScheme.onSurface
+                        ) {
+                            Text(
+                                text = snippet.title,
+                                modifier = Modifier.padding(horizontal = 15.dp, vertical = 9.dp),
+                                style = TextStyle(fontSize = 13.sp, fontWeight = FontWeight.Medium)
+                            )
+                        }
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            OpenKeyModCard(modifier = Modifier.fillMaxWidth()) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.okm_send_enter),
+                        style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.Medium)
+                    )
                     Switch(
                         checked = autoSendEnter,
-                        onCheckedChange = { autoSendEnter = it }
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = "Send Enter at end",
-                        style = MaterialTheme.typography.bodyMedium
+                        onCheckedChange = { autoSendEnter = it },
+                        colors = okmSwitchColors()
                     )
                 }
 
-                Text(
-                    text = "${delayMillis.toInt()}ms / char",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.primary
-                )
-            }
+                Spacer(modifier = Modifier.height(16.dp))
 
-            // Typing speed slider
-            Column(modifier = Modifier.fillMaxWidth()) {
-                Text(
-                    text = "Keystroke Delay (Higher is safer for slow BIOS / terminal buffers):",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.okm_typing_speed),
+                        style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight.Medium)
+                    )
+                    Text(
+                        text = stringResource(id = R.string.okm_delay_value, delayMillis.toInt()),
+                        style = TextStyle(
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.SemiBold
+                        ),
+                        color = OkmColors.accent()
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                OpenKeyModSegmentedControl(
+                    options = speedOptions,
+                    selected = selectedSpeed,
+                    label = { speedLabels[it] ?: "" },
+                    onSelected = { delayMillis = it.toFloat() }
                 )
+
+                Spacer(modifier = Modifier.height(10.dp))
+
                 Slider(
                     value = delayMillis,
                     onValueChange = { delayMillis = it },
                     valueRange = 5f..150f,
-                    steps = 14
+                    steps = 14,
+                    colors = SliderDefaults.colors(
+                        thumbColor = OkmColors.accent(),
+                        activeTrackColor = OkmColors.accent(),
+                        inactiveTrackColor = OkmColors.inset()
+                    )
+                )
+
+                Text(
+                    text = stringResource(id = R.string.okm_delay_hint),
+                    style = OkmTypography.sheetSubtitle,
+                    color = OkmColors.secondaryText()
                 )
             }
 
-            // Send Action Button
-            Button(
+            Spacer(modifier = Modifier.height(18.dp))
+
+            OpenKeyModPrimaryButton(
+                text = stringResource(
+                    id = R.string.okm_send_to_target
+                ) + " · " + pluralStringResource(
+                    id = R.plurals.okm_char_count,
+                    count = textContent.length,
+                    textContent.length
+                ),
                 onClick = {
                     if (textContent.isNotEmpty()) {
                         onSendText(textContent, autoSendEnter, delayMillis.toLong())
                         onDismissRequest()
                     }
                 },
-                modifier = Modifier.fillMaxWidth(),
-                enabled = textContent.isNotEmpty(),
-                shape = RoundedCornerShape(10.dp)
-            ) {
-                Text(text = "Send to Target (${textContent.length} chars)")
-            }
+                enabled = textContent.isNotEmpty()
+            )
+
+            Spacer(modifier = Modifier.height(6.dp))
         }
     }
 }

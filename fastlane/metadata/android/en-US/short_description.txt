@@ -1,1 +1,1 @@
-Bluetooth remote control for Android TV.
+Bluetooth keyboard, mouse, and macro remote for any screen.

@@ -32,6 +32,7 @@ fun IconSurfaceButton(
     shape: Shape = RectangleShape,
     elevation: Dp = surfaceElevationMedium(),
     shadowElevation: Dp = surfaceElevationShadow(),
+    fill: Color = com.atharok.btremote.ui.theme.OkmGlass.palette().contentStrong,
     @FloatRange(from = 0.0, to = 1.0) iconFillFraction: Float = 0.5f,
     iconPadding: Dp = 0.dp,
     iconTint: Color = LocalContentColor.current
@@ -42,7 +43,8 @@ fun IconSurfaceButton(
         modifier = modifier,
         shape = shape,
         elevation = elevation,
-        shadowElevation = shadowElevation
+        shadowElevation = shadowElevation,
+        fill = fill
     ) {
         Icon(
             imageVector = image,
@@ -61,6 +63,7 @@ fun RemoteIconSurfaceButton(
     shape: Shape = RectangleShape,
     elevation: Dp = surfaceElevationMedium(),
     shadowElevation: Dp = surfaceElevationShadow(),
+    fill: Color = com.atharok.btremote.ui.theme.OkmGlass.palette().contentStrong,
     @FloatRange(from = 0.0, to = 1.0) iconFillFraction: Float = 0.5f,
     iconPadding: Dp = 0.dp,
     iconTint: Color = LocalContentColor.current
@@ -74,6 +77,7 @@ fun RemoteIconSurfaceButton(
         shape = shape,
         elevation = elevation,
         shadowElevation = shadowElevation,
+        fill = fill,
         iconFillFraction = iconFillFraction,
         iconPadding = iconPadding,
         iconTint = iconTint

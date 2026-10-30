@@ -1,32 +1,37 @@
 package com.atharok.btremote.ui.components
 
 import android.content.res.Configuration
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.RadioButton
-import androidx.compose.material3.RadioButtonColors
+import androidx.compose.material3.Surface
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.unit.dp
 import com.atharok.btremote.R
-import com.atharok.btremote.ui.theme.surfaceElevationMedium
+import com.atharok.btremote.common.utils.AppIcons
+import com.atharok.btremote.ui.theme.OkmGlass
+import com.atharok.btremote.ui.theme.glassSurface
 
 @Composable
 fun TemplateDialog(
@@ -38,6 +43,9 @@ fun TemplateDialog(
     dismissButtonText: String? = null,
     onDismissRequest: () -> Unit = {}
 ) {
+    val shape = RoundedCornerShape(30.dp)
+    val palette = OkmGlass.palette()
+
     AlertDialog(
         title = title,
         text = content,
@@ -48,8 +56,15 @@ fun TemplateDialog(
         dismissButton = {
             DialogButton(text = dismissButtonText, action = onDismissRequest)
         },
-        containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(surfaceElevationMedium()),
-        modifier = modifier
+        containerColor = Color.Transparent,
+        tonalElevation = 0.dp,
+        shape = shape,
+        modifier = modifier.glassSurface(
+            shape = shape,
+            palette = palette,
+            fill = palette.sheet,
+            shadowElevation = 24.dp
+        )
     )
 }
 
@@ -109,33 +124,43 @@ fun ListDialog(
             }
         },
         content = {
+            val palette = OkmGlass.palette()
+
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .verticalScroll(rememberScrollState()),
-                horizontalAlignment = Alignment.Start
+                verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 items.forEachIndexed { index, item ->
-                    Row(
+                    val isSelected = selected.intValue == index
+
+                    Surface(
+                        onClick = { selected.intValue = index },
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Start,
-                        verticalAlignment = Alignment.CenterVertically
+                        shape = RoundedCornerShape(12.dp),
+                        color = if(isSelected) palette.accent.copy(alpha = 0.12f) else Color.Transparent,
+                        contentColor = MaterialTheme.colorScheme.onSurface
                     ) {
-                        RadioButton(
-                            selected = selected.intValue == index,
-                            onClick = { selected.intValue = index },
-                            colors = RadioButtonColors(
-                                selectedColor = MaterialTheme.colorScheme.primary,
-                                unselectedColor = MaterialTheme.colorScheme.onSurface,
-                                disabledSelectedColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                                disabledUnselectedColor = MaterialTheme.colorScheme.onSurfaceVariant
+                        Row(
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 11.dp),
+                            horizontalArrangement = Arrangement.spacedBy(10.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            TextNormal(
+                                text = item,
+                                color = MaterialTheme.colorScheme.onSurface,
+                                modifier = Modifier.weight(1f)
                             )
-                        )
-                        TextNormal(
-                            text = item,
-                            color = MaterialTheme.colorScheme.onSurface,
-                            modifier = Modifier.clickable { selected.intValue = index }
-                        )
+                            if(isSelected) {
+                                Icon(
+                                    imageVector = AppIcons.Check,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(18.dp),
+                                    tint = palette.accent
+                                )
+                            }
+                        }
                     }
                 }
             }
@@ -185,9 +210,13 @@ private fun DialogButton(
     text?.let {
         TextButton(
             onClick = action,
-            modifier = modifier
+            modifier = modifier,
+            shape = RoundedCornerShape(14.dp),
+            colors = ButtonDefaults.textButtonColors(
+                contentColor = OkmGlass.palette().accent
+            )
         ) {
-            TextNormal(text = text)
+            TextNormal(text = text, fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold)
         }
     }
 }

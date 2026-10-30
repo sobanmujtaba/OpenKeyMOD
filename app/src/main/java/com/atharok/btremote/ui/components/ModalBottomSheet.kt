@@ -7,21 +7,23 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.surfaceColorAtElevation
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.res.dimensionResource
 import com.atharok.btremote.R
 import com.atharok.btremote.common.extensions.autoMirroredIcon
-import com.atharok.btremote.ui.theme.surfaceElevationMedium
+import com.atharok.btremote.ui.theme.OkmGlass
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -33,10 +35,16 @@ fun TemplateModalBottomSheet(
     modifier: Modifier = Modifier,
     content: @Composable (ColumnScope.() -> Unit)
 ) {
+    val palette = OkmGlass.palette()
+
     ModalBottomSheet(
         onDismissRequest = onDismissRequest,
         modifier = modifier,
-        containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(surfaceElevationMedium()),
+        sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+        containerColor = palette.sheet,
+        contentColor = MaterialTheme.colorScheme.onSurface,
+        scrimColor = palette.scrim,
+        shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp),
         contentWindowInsets = {
             WindowInsets(0, 0, 0, 0)
         }

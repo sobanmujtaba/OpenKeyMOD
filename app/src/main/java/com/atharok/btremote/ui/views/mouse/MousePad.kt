@@ -8,16 +8,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.input.pointer.PointerInputChange
 import androidx.compose.ui.input.pointer.changedToDown
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChange
 import com.atharok.btremote.common.utils.Ref
+import com.atharok.btremote.common.utils.DOUBLE_TAP_DURATION_MAX
 import com.atharok.btremote.common.utils.TAP_DRIFT_MAX_PX
 import com.atharok.btremote.common.utils.TAP_DURATION_MAX
 import com.atharok.btremote.domain.entities.remoteInput.MouseAction
 import com.atharok.btremote.ui.components.DefaultElevatedCard
+import com.atharok.btremote.ui.theme.OkmGlass
 
 @Composable
 fun MousePad(
@@ -27,16 +30,22 @@ fun MousePad(
     sendMousePosition: (Float, Float) -> Unit,
     sendMouseScroll: (Float) -> Unit,
     shape: Shape,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    fill: Color = OkmGlass.palette().contentStrong,
+    inset: Boolean = false
 ) {
     val tapStartTimestamp = remember { Ref(0L) }
     val tapFingerCount = remember { Ref(0) }
     val tapAccumulatedDrift = remember { Ref(0f) }
     val scrollAccumulator = remember { Ref(0f) }
+    val lastTapTimestamp = remember { Ref(0L) }
+    val isDoubleTapDrag = remember { Ref(false) }
 
     DefaultElevatedCard(
         modifier = modifier,
-        shape = shape
+        shape = shape,
+        fill = fill,
+        inset = inset
     ) {
         Box(
             modifier = Modifier
@@ -62,6 +71,10 @@ fun MousePad(
                                 onTapFingerCountChange = { tapFingerCount.value = it },
                                 tapAccumulatedDrift = tapAccumulatedDrift.value,
                                 onTapAccumulatedDriftChange = { tapAccumulatedDrift.value = it },
+                                lastTapTimestamp = lastTapTimestamp.value,
+                                onLastTapTimestampChange = { lastTapTimestamp.value = it },
+                                isDoubleTapDrag = isDoubleTapDrag.value,
+                                onDoubleTapDragChange = { isDoubleTapDrag.value = it },
                                 sendMouseAction = sendMouseAction
                             )
 
@@ -101,6 +114,10 @@ private fun doTap(
     onTapFingerCountChange: (Int) -> Unit,
     tapAccumulatedDrift: Float,
     onTapAccumulatedDriftChange: (Float) -> Unit,
+    lastTapTimestamp: Long,
+    onLastTapTimestampChange: (Long) -> Unit,
+    isDoubleTapDrag: Boolean,
+    onDoubleTapDragChange: (Boolean) -> Unit,
     sendMouseAction: (input: MouseAction) -> Unit
 ) {
     // Store the maximum number of fingers that simultaneously touched the pad, used to determine
@@ -112,7 +129,21 @@ private fun doTap(
     // If a first finger touches the pad, store the timestamp of the initial contact.
     val isFingerDown = inputChanges.any { it.changedToDown() }
     if (isFingerDown && tapStartTimestamp == 0L) {
-        onTapStartTimestampChange(System.currentTimeMillis())
+        val now = System.currentTimeMillis()
+        onTapStartTimestampChange(now)
+
+        // A second one-finger tap that follows the first one quickly starts a drag. The left
+        // button stays pressed until the finger is lifted, exactly like a laptop touchpad.
+        if (
+            !isDoubleTapDrag &&
+            inputChanges.size == 1 &&
+            lastTapTimestamp > 0L &&
+            now - lastTapTimestamp <= DOUBLE_TAP_DURATION_MAX
+        ) {
+            onDoubleTapDragChange(true)
+            onLastTapTimestampChange(0L)
+            sendMouseAction(MouseAction.MOUSE_CLICK_LEFT)
+        }
         return
     }
 
@@ -125,18 +156,26 @@ private fun doTap(
     // If all fingers are lifted, check if the gesture qualifies as a tap
     val isAllFingersUp = inputChanges.none { it.pressed }
     if (isAllFingersUp) {
-        val tapDuration = System.currentTimeMillis() - tapStartTimestamp
+        val now = System.currentTimeMillis()
+        val tapDuration = now - tapStartTimestamp
 
-        if (tapDuration < TAP_DURATION_MAX && tapAccumulatedDrift < TAP_DRIFT_MAX_PX) {
+        if (isDoubleTapDrag) {
+            sendMouseAction(MouseAction.NONE)
+            onLastTapTimestampChange(0L)
+        } else if (tapDuration < TAP_DURATION_MAX && tapAccumulatedDrift < TAP_DRIFT_MAX_PX) {
             when (tapFingerCount) {
                 1 -> sendMouseAction(MouseAction.MOUSE_CLICK_LEFT)
                 2 -> sendMouseAction(MouseAction.MOUSE_CLICK_RIGHT)
                 3 -> sendMouseAction(MouseAction.MOUSE_CLICK_MIDDLE)
             }
             sendMouseAction(MouseAction.NONE)
+            onLastTapTimestampChange(if(tapFingerCount == 1) now else 0L)
+        } else {
+            onLastTapTimestampChange(0L)
         }
 
         // Reset state
+        onDoubleTapDragChange(false)
         onTapStartTimestampChange(0L)
         onTapFingerCountChange(0)
         onTapAccumulatedDriftChange(0f)

@@ -3,6 +3,8 @@ package com.atharok.btremote.domain.repositories
 import com.atharok.btremote.domain.entities.RemoteNavigationEntity
 import com.atharok.btremote.domain.entities.remoteInput.PhysicalVolumeButtonAction
 import com.atharok.btremote.domain.entities.remoteInput.keyboard.KeyboardLanguage
+import com.atharok.btremote.domain.entities.runbook.ShortcutProfile
+import com.atharok.btremote.domain.entities.settings.AccentColorEntity
 import com.atharok.btremote.domain.entities.settings.AppearanceSettings
 import com.atharok.btremote.domain.entities.settings.RemoteSettings
 import com.atharok.btremote.domain.entities.settings.ThemeEntity
@@ -15,6 +17,8 @@ interface DataStoreRepository {
     val appearanceSettingsFlow: Flow<AppearanceSettings>
 
     suspend fun saveTheme(themeEntity: ThemeEntity)
+
+    suspend fun saveAccentColor(accentColor: AccentColorEntity)
 
     suspend fun saveUseDynamicColors(useDynamicColors: Boolean)
 
@@ -67,4 +71,9 @@ interface DataStoreRepository {
 
     fun hideBluetoothActivationButton(): Flow<Boolean>
     suspend fun saveHideBluetoothActivationButton(hide: Boolean)
+
+    // ---- Shortcut Hub ----
+
+    val shortcutProfilesFlow: Flow<List<ShortcutProfile>>
+    suspend fun saveShortcutProfiles(profiles: List<ShortcutProfile>)
 }

@@ -72,7 +72,7 @@ object AndroidKeyMapper {
         Key.F12 to KeyboardKey.KEY_F12.byte,
         Key.Enter to KeyboardKey.KEY_ENTER.byte,
         Key.Escape to KeyboardKey.KEY_ESCAPE.byte,
-        Key.Backspace to KeyboardKey.KEY_DELETE.byte,
+        Key.Backspace to KeyboardKey.KEY_BACKSPACE.byte,
         Key.Tab to KeyboardKey.KEY_TAB.byte,
         Key.Spacebar to KeyboardKey.KEY_SPACE_BAR.byte,
         Key.DirectionRight to KeyboardKey.KEY_RIGHT_ARROW.byte,

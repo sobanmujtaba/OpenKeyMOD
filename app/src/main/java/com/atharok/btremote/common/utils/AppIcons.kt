@@ -24,8 +24,10 @@ import androidx.compose.material.icons.rounded.Bluetooth
 import androidx.compose.material.icons.rounded.BluetoothDisabled
 import androidx.compose.material.icons.rounded.BrightnessHigh
 import androidx.compose.material.icons.rounded.BrightnessLow
+import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material.icons.rounded.Circle
 import androidx.compose.material.icons.rounded.ClosedCaption
+import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Computer
 import androidx.compose.material.icons.rounded.ControlCamera
 import androidx.compose.material.icons.rounded.Delete
@@ -85,6 +87,7 @@ object AppIcons {
     val Refresh get() = Icons.Rounded.Refresh
     val MoreVert get() = Icons.Rounded.MoreVert
     val MoreHoriz get() = Icons.Rounded.MoreHoriz
+    val Close get() = Icons.Rounded.Close
     val Visibility get() = Icons.Rounded.Visibility
     //val Done get() = Icons.Rounded.Done
     val Appearance get() = Icons.Rounded.Palette
@@ -93,6 +96,8 @@ object AppIcons {
     val Lock get() = Icons.Rounded.Lock
     val Key get() = Icons.Rounded.Key
     val Favorite get() = Icons.Rounded.Favorite
+    val Add get() = Icons.Rounded.Add
+    val Check get() = Icons.Rounded.Check
 
     // ---- Remote ----
 
@@ -167,6 +172,7 @@ object AppIcons {
 
     val Send get() = Icons.AutoMirrored.Rounded.Send
     val Input get() = Icons.AutoMirrored.Rounded.Input
+    val Numpad get() = Icons.Rounded.Dialpad
 
     // ---- Mouse ----
 

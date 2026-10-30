@@ -8,7 +8,7 @@
         If you choose to translate it, ensure that the name is 11 characters or fewer if possible.
         If the text exceeds 11 characters, it's not a problem, but it may not display entirely in all launchers.
     -->
-    <string name="app_name">BT Remote</string>
+    <string name="app_name">OpenKeyMOD</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
     <string name="error">Error</string>
@@ -94,6 +94,7 @@
     <string name="remote">Remote</string>
     <string name="more">More</string>
     <string name="disconnect">Disconnect</string>
+    <string name="connected">Connected</string>
     <string name="direction_arrows">Direction arrows</string>
     <string name="more_buttons">More Buttons</string>
 
@@ -105,6 +106,16 @@
     <string name="settings">Settings</string>
     <string name="appearance">Appearance</string>
     <string name="theme">Theme</string>
+    <string name="accent_color">Accent color</string>
+    <string name="accent_color_info">Used for highlights, sliders and selected controls</string>
+    <string name="accent_graphite">Graphite</string>
+    <string name="accent_blue">Blue</string>
+    <string name="accent_green">Green</string>
+    <string name="accent_teal">Teal</string>
+    <string name="accent_orange">Orange</string>
+    <string name="accent_pink">Pink</string>
+    <string name="accent_purple">Purple</string>
+    <string name="accent_red">Red</string>
     <string name="theme_system">System</string>
     <string name="theme_light">Light</string>
     <string name="theme_dark">Dark</string>
@@ -140,6 +151,8 @@
     <string name="third_party_library">Third-party libraries</string>
     <string name="website">Website</string>
     <string name="source_code">Source code</string>
+    <string name="linkedin">LinkedIn</string>
+    <string name="developed_by">Developed by Soban Mujtaba</string>
     <string name="code_version">Version %1$s</string>
     <string name="default_option">Default</string>
 
@@ -330,4 +343,89 @@
     <string name="kotlin_serialization_id" translatable="false">org.jetbrains.kotlinx:kotlinx-serialization-json</string>
     <string name="kotlin_serialization_url" translatable="false">https://github.com/Kotlin/kotlinx.serialization</string>
 
+    <!-- OpenKeyMOD tools -->
+    <string name="okm_eyebrow" translatable="false">OpenKeyMOD</string>
+    <string name="okm_trackpad">Trackpad</string>
+    <string name="okm_trackpad_hint">Drag to move · tap to click · double-tap &amp; drag · two fingers to scroll</string>
+    <string name="okm_left_click">Left</string>
+    <string name="okm_middle_click">Middle</string>
+    <string name="okm_right_click">Right</string>
+    <string name="okm_scroll">Scroll</string>
+    <string name="okm_compose_title" translatable="false">Compose &amp; Send</string>
+    <string name="okm_compose_subtitle" translatable="false">Type, paste, and send at a pace the target can keep up with.</string>
+    <string name="okm_paste" translatable="false">Paste</string>
+    <string name="okm_clear" translatable="false">Clear</string>
+    <string name="okm_compose_placeholder" translatable="false">Commands, passwords, BIOS notes…</string>
+    <string name="okm_send_enter" translatable="false">Press Enter when finished</string>
+    <string name="okm_typing_speed" translatable="false">Typing speed</string>
+    <string name="okm_delay_value" translatable="false">%1$d ms per key</string>
+    <string name="okm_delay_hint" translatable="false">Slower is safer for BIOS and serial consoles.</string>
+    <string name="okm_send_to_target" translatable="false">Send to Target</string>
+    <string name="okm_quick_snippets" translatable="false">Quick snippets</string>
+    <string name="okm_numpad_title" translatable="false">Numpad</string>
+    <string name="okm_numpad_subtitle" translatable="false">Quick numbers for hosts, BIOS, and servers.</string>
+    <string name="okm_num_lock" translatable="false">Num Lock</string>
+    <string name="okm_backspace" translatable="false">Backspace</string>
+    <string name="okm_last_key" translatable="false">Last key</string>
+    <string name="okm_ready" translatable="false">Ready</string>
+    <string name="okm_nothing_sent" translatable="false">Nothing sent yet</string>
+    <string name="okm_presentation_title" translatable="false">Presentation</string>
+    <string name="okm_presentation_subtitle" translatable="false">Advance slides and keep your timing in view.</string>
+    <string name="okm_timer" translatable="false">Timer</string>
+    <string name="okm_start" translatable="false">Start</string>
+    <string name="okm_pause" translatable="false">Pause</string>
+    <string name="okm_reset" translatable="false">Reset</string>
+    <string name="okm_previous_slide" translatable="false">Previous</string>
+    <string name="okm_next_slide" translatable="false">Next</string>
+    <string name="okm_slideshow_start" translatable="false">Start slideshow</string>
+    <string name="okm_slideshow_end" translatable="false">End slideshow</string>
+    <string name="okm_black_screen" translatable="false">Black screen</string>
+    <string name="okm_white_screen" translatable="false">White screen</string>
+    <string name="okm_macros_title" translatable="false">Shortcuts</string>
+    <string name="okm_macros_subtitle" translatable="false">System commands and function keys, one tap away.</string>
+    <string name="okm_system_macros" translatable="false">System shortcuts</string>
+    <string name="okm_function_keys" translatable="false">Function keys</string>
+    <string name="okm_navigation_keys" translatable="false">Navigation</string>
+    <string name="okm_deck_controls" translatable="false">Deck controls</string>
+    <string name="okm_speed_slow" translatable="false">Slow</string>
+    <string name="okm_speed_balanced" translatable="false">Balanced</string>
+    <string name="okm_speed_fast" translatable="false">Fast</string>
+    <string name="okm_snippet_hint" translatable="false">Tap a snippet to load it. Manage snippets in Shortcut Hub.</string>
+    <string name="okm_timer_running" translatable="false">In progress</string>
+    <string name="okm_timer_paused" translatable="false">Paused</string>
+    <string name="okm_hub_title" translatable="false">Shortcut Hub</string>
+    <string name="okm_hub_subtitle" translatable="false">Reusable commands, organized by profile and ready for Compose &amp; Send.</string>
+    <string name="okm_profiles" translatable="false">Profiles</string>
+    <string name="okm_new_profile" translatable="false">New profile</string>
+    <string name="okm_profile_name" translatable="false">Profile name</string>
+    <string name="okm_no_profile" translatable="false">Create a profile to start saving snippets.</string>
+    <string name="okm_snippets" translatable="false">Snippets</string>
+    <string name="okm_no_snippets" translatable="false">No snippets in this profile yet.</string>
+    <string name="okm_add_snippet" translatable="false">Add snippet</string>
+    <string name="okm_edit" translatable="false">Edit</string>
+    <string name="okm_rename" translatable="false">Rename</string>
+    <string name="okm_save" translatable="false">Save</string>
+    <string name="okm_create" translatable="false">Create</string>
+    <string name="okm_cancel" translatable="false">Cancel</string>
+    <string name="okm_snippet_title" translatable="false">Title</string>
+    <string name="okm_snippet_command" translatable="false">Command or text</string>
+    <string name="okm_snippet_category" translatable="false">Category</string>
+    <string name="okm_snippet_meta" translatable="false">%1$d ms per key</string>
+    <string name="okm_snippet_meta_enter" translatable="false">%1$d ms per key · Enter after send</string>
+    <string name="okm_import_export" translatable="false">Import / Export</string>
+    <string name="okm_import_export_hint" translatable="false">Move all profiles as JSON through the clipboard.</string>
+    <string name="okm_export_json" translatable="false">Export JSON</string>
+    <string name="okm_import_json" translatable="false">Import JSON</string>
+    <string name="okm_import_dialog_hint" translatable="false">Paste a Shortcut Hub JSON export. This replaces all current profiles.</string>
+    <string name="okm_import_success" translatable="false">Profiles imported.</string>
+    <string name="okm_import_invalid" translatable="false">That JSON could not be imported.</string>
+    <string name="okm_export_success" translatable="false">JSON copied to the clipboard.</string>
+    <string name="okm_delete_profile_title" translatable="false">Delete profile?</string>
+    <string name="okm_delete_profile_message" translatable="false">“%1$s” and its snippets will be removed.</string>
+    <string name="okm_delete_snippet_title" translatable="false">Delete snippet?</string>
+    <string name="okm_delete_snippet_message" translatable="false">“%1$s” will be removed from this profile.</string>
+    <plurals name="okm_char_count" translatable="false">
+        <item quantity="one">%1$d character</item>
+        <item quantity="other">%1$d characters</item>
+    </plurals>
 </resources>

@@ -48,6 +48,7 @@ import com.atharok.btremote.domain.entities.remoteInput.keyboard.virtualKeyboard
 import com.atharok.btremote.domain.entities.settings.RemoteSettings
 import com.atharok.btremote.presentation.services.BluetoothHidService
 import com.atharok.btremote.presentation.viewmodel.RemoteViewModel
+import com.atharok.btremote.presentation.viewmodel.ShortcutViewModel
 import com.atharok.btremote.ui.components.AppScaffold
 import com.atharok.btremote.ui.components.BasicDropdownMenuItem
 import com.atharok.btremote.ui.components.BasicIconButton
@@ -60,7 +61,9 @@ import com.atharok.btremote.ui.views.RemoteScreenHelpModalBottomSheet
 import com.atharok.btremote.ui.views.keyboard.AdvancedKeyboard
 import com.atharok.btremote.ui.views.keyboard.AdvancedKeyboardModalBottomSheet
 import com.atharok.btremote.ui.views.keyboard.ComposeAndSendModalBottomSheet
+import com.atharok.btremote.ui.views.keyboard.NumpadModalBottomSheet
 import com.atharok.btremote.ui.views.keyboard.PresentationModeModalBottomSheet
+import com.atharok.btremote.ui.views.keyboard.ShortcutHubModalBottomSheet
 import com.atharok.btremote.ui.views.keyboard.SysadminMacroModalBottomSheet
 import com.atharok.btremote.ui.views.keyboard.VirtualKeyboardModalBottomSheet
 import com.atharok.btremote.ui.views.mouse.MousePadLayout
@@ -84,12 +87,16 @@ fun RemoteScreen(
     navigateToSettings: () -> Unit,
     modifier: Modifier = Modifier,
     remoteViewModel: RemoteViewModel = koinViewModel(),
+    shortcutViewModel: ShortcutViewModel = koinViewModel(),
     context: Context = LocalContext.current
 ) {
     val configuration = LocalConfiguration.current
 
     val remoteSettings by remoteViewModel
         .remoteSettingsFlow.collectAsStateWithLifecycle(RemoteSettings())
+
+    val shortcutProfiles by shortcutViewModel
+        .profilesFlow.collectAsStateWithLifecycle(emptyList())
 
     // Remote
     var navigationToggle by rememberSaveable(remoteSettings.useMouseNavigationByDefault) { mutableStateOf(if(remoteSettings.useMouseNavigationByDefault) NavigationToggle.MOUSE else NavigationToggle.DIRECTION) }
@@ -101,6 +108,8 @@ fun RemoteScreen(
     var isComposeAndSendVisible: Boolean by rememberSaveable { mutableStateOf(false) }
     var isSysadminMacroVisible: Boolean by rememberSaveable { mutableStateOf(false) }
     var isPresentationModeVisible: Boolean by rememberSaveable { mutableStateOf(false) }
+    var isNumpadVisible: Boolean by rememberSaveable { mutableStateOf(false) }
+    var isShortcutHubVisible: Boolean by rememberSaveable { mutableStateOf(false) }
 
     // More Buttons
     var isMoreButtonsVisible: Boolean by rememberSaveable { mutableStateOf(false) }
@@ -131,6 +140,8 @@ fun RemoteScreen(
                 isKeyboardVisible = isKeyboardVisible,
                 onKeyboardVisibleChanged = { isKeyboardVisible = it },
                 onComposeAndSendClick = { isComposeAndSendVisible = true },
+                onShortcutHubClick = { isShortcutHubVisible = true },
+                onNumpadClick = { isNumpadVisible = true },
                 onSysadminMacroClick = { isSysadminMacroVisible = true },
                 onPresentationModeClick = { isPresentationModeVisible = true },
                 isMoreButtonsVisible = isMoreButtonsVisible,
@@ -194,10 +205,24 @@ fun RemoteScreen(
                     }
                     ComposeAndSendModalBottomSheet(
                         virtualKeyboardLayout = virtualKeyboardLayout,
+                        snippets = shortcutProfiles.flatMap { it.snippets },
                         onSendText = { text, enter, delayMs ->
                             remoteViewModel.sendText(text, virtualKeyboardLayout, enter, delayMs)
                         },
                         onDismissRequest = { isComposeAndSendVisible = false }
+                    )
+                }
+                isShortcutHubVisible -> {
+                    ShortcutHubModalBottomSheet(
+                        profiles = shortcutProfiles,
+                        onSaveProfiles = shortcutViewModel::saveProfiles,
+                        onDismissRequest = { isShortcutHubVisible = false }
+                    )
+                }
+                isNumpadVisible -> {
+                    NumpadModalBottomSheet(
+                        onSendKey = remoteViewModel::sendKey,
+                        onDismissRequest = { isNumpadVisible = false }
                     )
                 }
                 isSysadminMacroVisible -> {
@@ -213,9 +238,7 @@ fun RemoteScreen(
                 }
                 isPresentationModeVisible -> {
                     PresentationModeModalBottomSheet(
-                        onSendKey = { bytes ->
-                            remoteViewModel.sendKeyboardReport(bytes)
-                        },
+                        onSendKey = remoteViewModel::sendKey,
                         onDismissRequest = { isPresentationModeVisible = false }
                     )
                 }
@@ -245,6 +268,7 @@ private fun StatelessRemoteScreen(
 ) {
     AppScaffold(
         title = deviceName,
+        subtitle = stringResource(id = R.string.connected),
         modifier = modifier,
         scrollBehavior = null,
         topBarActions = topBarActions
@@ -518,6 +542,8 @@ private fun TopBarActions(
     isKeyboardVisible: Boolean,
     onKeyboardVisibleChanged: (Boolean) -> Unit,
     onComposeAndSendClick: () -> Unit,
+    onShortcutHubClick: () -> Unit,
+    onNumpadClick: () -> Unit,
     onSysadminMacroClick: () -> Unit,
     onPresentationModeClick: () -> Unit,
     isMoreButtonsVisible: Boolean,
@@ -584,7 +610,7 @@ private fun TopBarActions(
 
         // Compose & Send (OpenKeyMOD / KeyMOD Pro)
         BasicDropdownMenuItem(
-            text = "Compose & Send",
+            text = stringResource(id = R.string.okm_compose_title),
             icon = AppIcons.Send,
             onClick = {
                 closeDropdownMenu()
@@ -592,9 +618,29 @@ private fun TopBarActions(
             }
         )
 
+        // Shortcut Hub
+        BasicDropdownMenuItem(
+            text = stringResource(id = R.string.okm_hub_title),
+            icon = AppIcons.Menu,
+            onClick = {
+                closeDropdownMenu()
+                onShortcutHubClick()
+            }
+        )
+
+        // Numpad
+        BasicDropdownMenuItem(
+            text = stringResource(id = R.string.okm_numpad_title),
+            icon = AppIcons.Numpad,
+            onClick = {
+                closeDropdownMenu()
+                onNumpadClick()
+            }
+        )
+
         // Sysadmin Macros
         BasicDropdownMenuItem(
-            text = "Macros & F-Keys",
+            text = stringResource(id = R.string.okm_macros_title),
             icon = AppIcons.Computer,
             onClick = {
                 closeDropdownMenu()
@@ -604,8 +650,8 @@ private fun TopBarActions(
 
         // Presentation Remote
         BasicDropdownMenuItem(
-            text = "Presentation Remote",
-            icon = AppIcons.PlayArrow,
+            text = stringResource(id = R.string.okm_presentation_title),
+            icon = AppIcons.Play,
             onClick = {
                 closeDropdownMenu()
                 onPresentationModeClick()

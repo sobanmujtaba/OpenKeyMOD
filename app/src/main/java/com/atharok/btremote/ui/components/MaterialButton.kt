@@ -4,20 +4,23 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import com.atharok.btremote.R
+import com.atharok.btremote.ui.theme.OkmGlass
 
 @Composable
 fun MaterialButton(
@@ -26,9 +29,17 @@ fun MaterialButton(
     text: String = "",
     icon: ImageVector? = null
 ) {
+    val palette = OkmGlass.palette()
+
     Button(
         onClick = onClick,
-        modifier = modifier
+        modifier = modifier,
+        shape = RoundedCornerShape(16.dp),
+        colors = ButtonDefaults.buttonColors(
+            containerColor = palette.accentFill,
+            contentColor = palette.onAccentFill
+        ),
+        elevation = ButtonDefaults.buttonElevation(defaultElevation = 3.dp)
     ) {
         ButtonContent(
             text = text,
@@ -46,7 +57,8 @@ fun MaterialFilledTonalButton(
 ) {
     FilledTonalButton(
         onClick = onClick,
-        modifier = modifier
+        modifier = modifier,
+        shape = RoundedCornerShape(16.dp)
     ) {
         ButtonContent(
             text = text,
@@ -62,19 +74,25 @@ fun MaterialOutlinedButton(
     text: String = "",
     icon: ImageVector? = null
 ) {
+    val palette = OkmGlass.palette()
+
     OutlinedButton(
         onClick = onClick,
         modifier = modifier,
+        shape = RoundedCornerShape(16.dp),
         border = BorderStroke(
             width = 1.dp,
-            color = MaterialTheme.colorScheme.onPrimaryContainer
+            color = palette.border
+        ),
+        colors = ButtonDefaults.outlinedButtonColors(
+            contentColor = palette.accent
         )
     ) {
         ButtonContent(
             text = text,
             icon = icon,
-            textColor = MaterialTheme.colorScheme.onPrimaryContainer,
-            iconColor = MaterialTheme.colorScheme.onPrimaryContainer
+            textColor = palette.accent,
+            iconColor = palette.accent
         )
     }
 }
@@ -101,7 +119,8 @@ private fun ButtonContent(
 
         TextNormal(
             text = text,
-            color = textColor
+            color = textColor,
+            fontWeight = FontWeight.SemiBold
         )
     }
 }

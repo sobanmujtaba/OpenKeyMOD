@@ -2,6 +2,7 @@ package com.atharok.btremote.ui.app
 
 import android.bluetooth.BluetoothHidDevice
 import android.content.Context
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.exclude
@@ -16,6 +17,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -44,7 +46,7 @@ import com.atharok.btremote.ui.screens.RemoteScreen
 import com.atharok.btremote.ui.screens.SettingsScreen
 import com.atharok.btremote.ui.screens.ThirdLibrariesScreen
 import com.atharok.btremote.ui.theme.BtRemoteTheme
-import com.atharok.btremote.ui.theme.surfaceElevationLow
+import com.atharok.btremote.ui.theme.OkmGlassBackground
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -62,10 +64,7 @@ fun BtRemoteApp(
     BtRemoteTheme(
         appearance = appearance
     ) {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            tonalElevation = surfaceElevationLow()
-        ) {
+        GlassAppSurface {
             if(!appScopeViewModel.isBluetoothSupported) {
                 BluetoothNotSupportScreen()
             } else {
@@ -237,5 +236,18 @@ fun BtRemoteApp(
                 }
             }
         }
+    }
+}
+@Composable
+private fun GlassAppSurface(
+    content: @Composable () -> Unit
+) {
+    Box(modifier = Modifier.fillMaxSize()) {
+        OkmGlassBackground()
+        Surface(
+            modifier = Modifier.matchParentSize(),
+            color = Color.Transparent,
+            content = content
+        )
     }
 }

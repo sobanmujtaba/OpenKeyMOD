@@ -1,8 +1,11 @@
 package com.atharok.btremote.domain.entities.runbook
 
+import kotlinx.serialization.Serializable
+
 /**
  * Model representing a saved text snippet or command runbook (KM Pro feature in Openterface KeyMOD).
  */
+@Serializable
 data class RunbookSnippet(
     val id: String,
     val title: String,

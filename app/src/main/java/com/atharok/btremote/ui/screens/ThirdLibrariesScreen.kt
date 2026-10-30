@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,12 +17,14 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.atharok.btremote.R
 import com.atharok.btremote.common.utils.AppIcons
 import com.atharok.btremote.domain.entities.ThirdLibrary
 import com.atharok.btremote.ui.components.AppScaffold
 import com.atharok.btremote.ui.components.MaterialFilledTonalButton
 import com.atharok.btremote.ui.components.NavigateUpIconButton
+import com.atharok.btremote.ui.components.OkmGlassCard
 import com.atharok.btremote.ui.components.TextMedium
 import com.atharok.btremote.ui.components.TextNormalSecondary
 
@@ -56,16 +57,20 @@ fun StatelessThirdLibrariesScreen(
         LazyColumn(
             contentPadding = innerPadding
         ) {
-            itemsIndexed(libraries) { index, item ->
-                ThirdLibraryItem(
-                    library = item,
+            itemsIndexed(libraries) { _, item ->
+                OkmGlassCard(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(dimensionResource(id = R.dimen.padding_max))
-                )
-
-                if (index < libraries.lastIndex) {
-                    HorizontalDivider()
+                        .padding(
+                            horizontal = dimensionResource(id = R.dimen.padding_max),
+                            vertical = dimensionResource(id = R.dimen.padding_small)
+                        ),
+                    contentPadding = dimensionResource(id = R.dimen.padding_max)
+                ) {
+                    ThirdLibraryItem(
+                        library = item,
+                        modifier = Modifier.fillMaxWidth()
+                    )
                 }
             }
         }

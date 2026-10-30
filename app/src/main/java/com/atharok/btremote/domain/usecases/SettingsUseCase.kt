@@ -3,6 +3,7 @@ package com.atharok.btremote.domain.usecases
 import com.atharok.btremote.domain.entities.RemoteNavigationEntity
 import com.atharok.btremote.domain.entities.remoteInput.PhysicalVolumeButtonAction
 import com.atharok.btremote.domain.entities.remoteInput.keyboard.KeyboardLanguage
+import com.atharok.btremote.domain.entities.settings.AccentColorEntity
 import com.atharok.btremote.domain.entities.settings.AppearanceSettings
 import com.atharok.btremote.domain.entities.settings.RemoteSettings
 import com.atharok.btremote.domain.entities.settings.ThemeEntity
@@ -18,6 +19,10 @@ class SettingsUseCase(private val dataStoreRepository: DataStoreRepository) {
 
     suspend fun saveTheme(themeEntity: ThemeEntity) {
         dataStoreRepository.saveTheme(themeEntity)
+    }
+
+    suspend fun saveAccentColor(accentColor: AccentColorEntity) {
+        dataStoreRepository.saveAccentColor(accentColor)
     }
 
     suspend fun saveUseDynamicColors(useDynamicColors: Boolean) {

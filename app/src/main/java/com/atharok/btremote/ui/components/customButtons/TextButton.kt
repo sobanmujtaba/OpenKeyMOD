@@ -36,7 +36,8 @@ fun ChannelSurfaceButton(
     @FloatRange(from = 0.0, to = 1.0) percent: Float = 0.45f,
     shape: Shape = RectangleShape,
     elevation: Dp = surfaceElevationMedium(),
-    shadowElevation: Dp = surfaceElevationShadow()
+    shadowElevation: Dp = surfaceElevationShadow(),
+    fill: androidx.compose.ui.graphics.Color = com.atharok.btremote.ui.theme.OkmGlass.palette().contentStrong
 ) {
     SurfaceButton(
         touchDown = { sendKeyReport(properties.input) },
@@ -44,7 +45,8 @@ fun ChannelSurfaceButton(
         modifier = modifier,
         shape = shape,
         elevation = elevation,
-        shadowElevation = shadowElevation
+        shadowElevation = shadowElevation,
+        fill = fill
     ) {
         AdaptiveText(
             text = properties.text,

@@ -1,10 +1,10 @@
 package com.atharok.btremote.ui.components
 
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.surfaceColorAtElevation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -13,10 +13,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.atharok.btremote.R
 import com.atharok.btremote.common.extensions.autoMirroredIcon
 import com.atharok.btremote.common.utils.AppIcons
-import com.atharok.btremote.ui.theme.surfaceElevationHigh
+import com.atharok.btremote.ui.theme.OkmGlass
 
 @Composable
 private fun OverflowMenu(
@@ -30,7 +31,9 @@ private fun OverflowMenu(
     DropdownMenu(
         expanded = showMenu,
         onDismissRequest = { showMenu = false },
-        containerColor = MaterialTheme.colorScheme.surfaceColorAtElevation(surfaceElevationHigh())
+        containerColor = OkmGlass.palette().sheet,
+        shape = RoundedCornerShape(20.dp),
+        tonalElevation = 8.dp
     ) {
         content { showMenu = false }
     }

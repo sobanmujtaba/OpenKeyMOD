@@ -62,6 +62,7 @@ import com.atharok.btremote.domain.usecases.DeviceSelectionUseCase
 import com.atharok.btremote.domain.usecases.GyroscopeSensorUseCase
 import com.atharok.btremote.domain.usecases.RemoteUseCase
 import com.atharok.btremote.domain.usecases.SettingsUseCase
+import com.atharok.btremote.domain.usecases.ShortcutUseCase
 import com.atharok.btremote.presentation.viewmodel.AppScopeViewModel
 import com.atharok.btremote.presentation.viewmodel.BluetoothActivationViewModel
 import com.atharok.btremote.presentation.viewmodel.DeviceDiscoveryViewModel
@@ -69,6 +70,7 @@ import com.atharok.btremote.presentation.viewmodel.DeviceSelectionViewModel
 import com.atharok.btremote.presentation.viewmodel.GyroscopeSensorViewModel
 import com.atharok.btremote.presentation.viewmodel.RemoteViewModel
 import com.atharok.btremote.presentation.viewmodel.SettingsViewModel
+import com.atharok.btremote.presentation.viewmodel.ShortcutViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.viewModel
@@ -185,6 +187,12 @@ private val viewModelModule: Module = module {
             useCase = get<RemoteUseCase>()
         )
     }
+
+    viewModel {
+        ShortcutViewModel(
+            useCase = get<ShortcutUseCase>()
+        )
+    }
 }
 
 private val useCaseModule: Module = module {
@@ -210,6 +218,12 @@ private val useCaseModule: Module = module {
 
     single {
         SettingsUseCase(
+            dataStoreRepository = get<DataStoreRepository>()
+        )
+    }
+
+    single {
+        ShortcutUseCase(
             dataStoreRepository = get<DataStoreRepository>()
         )
     }

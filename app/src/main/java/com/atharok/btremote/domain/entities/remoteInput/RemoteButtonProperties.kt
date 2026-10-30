@@ -217,7 +217,7 @@ enum class RemoteButtonProperties(
     ),
 
     KeyboardBackspaceButton(
-        input = byteArrayOf(0x00, KeyboardKey.KEY_DELETE.byte),
+        input = byteArrayOf(0x00, KeyboardKey.KEY_BACKSPACE.byte),
         icon = AppIcons.KeyboardBackspace,
         stringRes = R.string.delete
     ),

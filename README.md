@@ -1,85 +1,75 @@
-<div align="center"><img src="assets/icon_round.png" width="192" /></div>
+<p align="center">
+  <img src="fastlane/metadata/android/en-US/images/icon.png" width="128" alt="OpenKeyMOD icon">
+</p>
 
-## <div align="center">BT Remote</div>
+<h1 align="center">OpenKeyMOD</h1>
 
-<div align="center"><h4>An Android app that turns your smartphone into a Bluetooth remote for Android TV.</h4></div>
+<p align="center">
+  <strong>Turn your Android phone into a Bluetooth keyboard, mouse, trackpad, and macro pad.</strong>
+</p>
 
-<div align="center">
-    <a href="https://f-droid.org/packages/com.atharok.btremote/" target="_blank"><img src="assets/get-it-on-f-droid-badge.png" alt="Get it on F-Droid" height="90"></a>
-    <a href="https://play.google.com/store/apps/details?id=com.atharok.btremote.gplay" target="_blank"><img src="assets/get-it-on-google-play-badge.png" alt="Get it on Google Play" height="90"></a>
-</div>
+<p align="center">
+  <a href="https://github.com/sobanmujtaba/OpenKeyMOD/releases"><img src="https://img.shields.io/badge/Download-APK-2ea44f" alt="Download APK"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-GPLv3-blue.svg" alt="License: GPLv3"></a>
+  <img src="https://img.shields.io/badge/Android-9.0%2B-3ddc84" alt="Android 9.0+">
+</p>
 
-You may also download the APK directly from [GitLab](https://gitlab.com/Atharok/BtRemote/-/releases).
+> **OpenKeyMOD is not on the Google Play Store.** It is distributed as a direct APK download through [GitHub Releases](https://github.com/sobanmujtaba/OpenKeyMOD/releases).
 
-[![License: GPLv3](https://img.shields.io/badge/License-GPLv3-blue)](https://www.gnu.org/licenses/gpl-3.0)
+OpenKeyMOD makes an Android device appear as a standard Bluetooth HID peripheral. Pair it once, and it acts as a keyboard, mouse, trackpad, media remote, and shortcut pad. No companion app or driver is required on the target device.
 
-## Description
+It is a cross-platform reinterpretation of the original [BT Remote](https://gitlab.com/Atharok/BtRemote) for Android TV, built on the Bluetooth HID work of [jqssun's fork](https://github.com/jqssun/android-bt-remote) and extended by [Soban Mujtaba](https://github.com/sobanmujtaba).
 
-Turn your smartphone into a Bluetooth remote control to easily navigate and interact with your Android TV.
+<video loop src="https://github.com/user-attachments/assets/9bddf132-a861-4693-b408-2539646b7e8b" alt="OpenKeyMOD demo" width="100%" style="display: block; margin: auto;"></video>
 
-Features:
+## What it does
 
-- Wireless control via Bluetooth connection.
-- Includes all necessary buttons for remote control of your device.
-- Support for integrated mouse and keyboard.
-- No additional app installation required on your Android TV device thanks to HID protocol.
-- Modern and responsive user interface.
-- Developed with Kotlin, Jetpack Compose, and Material 3.
-- Privacy-focused with no data collection (internet permission disabled).
-- No advertisements.
-- Open source.
+- **Keyboard, mouse, and trackpad** over Bluetooth Classic HID.
+- **Media and navigation controls**, including a TV-friendly D-pad layout.
+- **Shortcut Hub** for reusable text snippets, runbooks, and macros.
+- **Compose & Send** for entering longer text from your phone.
+- **Numpad, function keys, and presentation controls**.
+- **No target-side software.** The host sees a normal Bluetooth keyboard/mouse.
+- **No internet permission, no ads, and no tracking.**
+- **Open source** under GPLv3.
 
-## Screenshots
+## Compatibility
 
-<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/01.png" width="192" />
-<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/02.png" width="192" />
-<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/04.png" width="192" />
-<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/05.png" width="192" />
-<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/07.png" width="384" />
-<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/08.png" width="384" />
+OpenKeyMOD sends standard Bluetooth HID keyboard, mouse, and consumer-control reports. It has been tested with a **Linux** host.
 
-## Donate
+Hosts that accept generic Bluetooth keyboards and mice may also work, including Windows, macOS, Android, ChromeOS, and some TV devices, but they have not all been verified yet. If you test one, please share the result in [Issues](https://github.com/sobanmujtaba/OpenKeyMOD/issues).
 
-If you like BT Remote, you can support me via [Liberapay](https://liberapay.com/Atharok/donate) or [Ko-fi](https://ko-fi.com/atharok).
+## Install
 
-[![Donate](assets/liberapay-badge.png)](https://liberapay.com/Atharok/donate)
-[![Donate](assets/ko-fi-badge.png)](https://ko-fi.com/atharok)
+1. Download the latest APK from [GitHub Releases](https://github.com/sobanmujtaba/OpenKeyMOD/releases).
+2. Allow installing apps from your browser or file manager when prompted.
+3. Open OpenKeyMOD, grant the Bluetooth permission, and pair with your target device.
+4. Start typing, pointing, and sending shortcuts.
 
-## Contribution
+There is currently **no Google Play release**. GitHub Releases and source builds are the supported distribution channels.
 
-If you want to translate the app, please use the [Weblate on Codeberg](https://translate.codeberg.org/projects/btremote/) or submit a merge request on GitLab.
-If you have any questions regarding contributions or translations, feel free to open an issue or contact me by [e-mail](mailto:atharok@duck.com).
+## Project status
 
-## Checksums
+OpenKeyMOD is under active development. Core keyboard, mouse, trackpad, media, and shortcut features work, but Bluetooth pairing behavior can vary between hosts. Bug reports and host compatibility notes are welcome in [Issues](https://github.com/sobanmujtaba/OpenKeyMOD/issues).
 
-To verify the authenticity and integrity of the APK, compare its signature against the certificate fingerprints shown below:
+## Build from source
 
+Open the project in Android Studio, or build from the command line:
+
+```bash
+git clone https://github.com/sobanmujtaba/OpenKeyMOD.git
+cd OpenKeyMOD
+./gradlew :app:assembleDefaultRelease
 ```
-SHA-256: e6cf1629d462a3686aa4ba2d37e02777257fd0a3bbe5540d8c70f80e12d111cd
-SHA-1: 8d66ed4b5d105f7fecce6ebd07dddc569cab29b9
-MD5: ea0d7434b89110e49386132bb005bb6b
-```
 
-Notes about third-party distribution platforms:
+The release APK is written to `app/build/outputs/apk/default/release/app-default-release.apk`.
 
-- Google Play: The app is re-signed by Google with its own key, so the the certificate fingerprints will differ.
-- F-Droid: The build is reproducible, so the certificate fingerprints listed above also apply to the release from F-Droid.
+## Credits
 
-## Licences
+- **[Atharok](https://gitlab.com/Atharok/BtRemote)** — creator of the original BT Remote, the Android TV Bluetooth HID remote this project is based on.
+- **[jqssun](https://github.com/jqssun/android-bt-remote)** — cross-platform HID fork that OpenKeyMOD builds upon.
+- **[Soban Mujtaba](https://github.com/sobanmujtaba)** — OpenKeyMOD fork, UI, shortcuts, and release packaging.
 
-The code is licensed under the [GPLv3](https://www.gnu.org/licenses/gpl-3.0).
+## License
 
-Dependencies:
-
-- [Core KTX](https://github.com/androidx/androidx) is licensed under [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0)
-- [Activity Compose](https://github.com/androidx/androidx) is licensed under [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0)
-- [Compose BOM](https://github.com/androidx/androidx) is licensed under [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0)
-- [Compose UI](https://github.com/androidx/androidx) is licensed under [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0)
-- [Compose UI Graphics](https://github.com/androidx/androidx) is licensed under [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0)
-- [Compose Material 3](https://github.com/androidx/androidx) is licensed under [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0)
-- [Compose Material Icons Extended](https://github.com/androidx/androidx) is licensed under [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0)
-- [Lifecycle Runtime Compose](https://github.com/androidx/androidx) is licensed under [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0)
-- [Navigation Compose](https://github.com/androidx/androidx) is licensed under [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0)
-- [DataStore Preferences](https://github.com/androidx/androidx) is licensed under [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0)
-- [Koin AndroidX Compose](https://github.com/InsertKoinIO/koin) is licensed under [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0)
-- [Kotlin Serialization](https://github.com/Kotlin/kotlinx.serialization) is licensed under [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0)
+OpenKeyMOD is licensed under the [GNU General Public License v3.0](LICENSE), the same license as the upstream project. If you distribute a modified build, you must also make the corresponding source available under GPLv3.

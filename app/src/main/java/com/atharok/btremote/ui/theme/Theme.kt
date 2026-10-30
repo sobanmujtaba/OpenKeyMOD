@@ -1,23 +1,25 @@
 package com.atharok.btremote.ui.theme
 
 import android.content.Context
+import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Shapes
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
-import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
-import com.atharok.btremote.R
 import com.atharok.btremote.common.extensions.getActivity
 import com.atharok.btremote.common.extensions.setFullScreen
 import com.atharok.btremote.common.utils.isDynamicColorsAvailable
@@ -318,18 +320,31 @@ fun BtRemoteTheme(
             view.context.getActivity()?.let { activity ->
                 val window = activity.window
                 WindowCompat.setDecorFitsSystemWindows(window, false)
+                window.statusBarColor = android.graphics.Color.TRANSPARENT
+                window.navigationBarColor = android.graphics.Color.TRANSPARENT
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    window.isNavigationBarContrastEnforced = false
+                }
                 WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars = !useDarkTheme
                 WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightNavigationBars = !useDarkTheme
             }
         }
     }
 
-    MaterialTheme(
-        colorScheme = colorScheme,
-        shapes = MaterialTheme.shapes.copy(
-            extraSmall = RoundedCornerShape(dimensionResource(id = R.dimen.card_corner_radius))
-        ),
-        typography = Typography,
-        content = content
-    )
+    CompositionLocalProvider(
+        LocalOkmAccent provides appearance.accentColor
+    ) {
+        MaterialTheme(
+            colorScheme = colorScheme,
+            shapes = Shapes(
+                extraSmall = RoundedCornerShape(12.dp),
+                small = RoundedCornerShape(16.dp),
+                medium = RoundedCornerShape(20.dp),
+                large = RoundedCornerShape(28.dp),
+                extraLarge = RoundedCornerShape(32.dp)
+            ),
+            typography = Typography,
+            content = content
+        )
+    }
 }

@@ -13,8 +13,8 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
@@ -38,6 +38,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.atharok.btremote.R
 import com.atharok.btremote.common.utils.AppIcons
@@ -52,13 +53,16 @@ import com.atharok.btremote.ui.components.BasicOverflowMenu
 import com.atharok.btremote.ui.components.DefaultElevatedCard
 import com.atharok.btremote.ui.components.HelpIconButton
 import com.atharok.btremote.ui.components.LoadingDialog
+import com.atharok.btremote.ui.components.OkmGlassCard
+import com.atharok.btremote.ui.components.OkmGlassDivider
+import com.atharok.btremote.ui.components.OpenKeyModSectionLabel
 import com.atharok.btremote.ui.components.SettingsIconButton
 import com.atharok.btremote.ui.components.SimpleDialog
 import com.atharok.btremote.ui.components.TemplateDialog
 import com.atharok.btremote.ui.components.TextLarge
-import com.atharok.btremote.ui.components.TextMedium
 import com.atharok.btremote.ui.components.TextNormal
 import com.atharok.btremote.ui.components.TextNormalSecondary
+import com.atharok.btremote.ui.theme.OkmGlass
 import com.atharok.btremote.ui.views.DeviceItemView
 import com.atharok.btremote.ui.views.DevicesSelectionScreenHelpModalBottomSheet
 import kotlinx.coroutines.launch
@@ -298,7 +302,7 @@ private fun DevicesListView(
 
         if(favoriteDevices.isNotEmpty()) {
             item {
-                TextNormalSecondary(
+                OpenKeyModSectionLabel(
                     text = stringResource(id = R.string.favorites),
                     modifier = Modifier
                         .fillMaxWidth()
@@ -308,22 +312,21 @@ private fun DevicesListView(
                         )
                 )
             }
-            items(favoriteDevices) { device ->
-                DeviceItemView(
-                    name = device.name,
-                    macAddress = device.macAddress,
-                    icon = device.imageVector,
-                    isAutoConnectDeviceAddress = autoConnectDeviceAddress == device.macAddress,
-                    autoConnect = { autoConnect(InternalDevice(device.name, device.macAddress)) },
-                    isFavoriteDevice = true,
-                    onFavoriteDeviceChanged = {
-                        saveFavoriteDevice(device.macAddress)
-                    },
-                    unpair = { unpairDevice(InternalDevice(device.name, device.macAddress)) },
+            item {
+                DeviceListSection(
+                    devices = favoriteDevices,
+                    isFavorite = true,
+                    connectDevice = connectDevice,
+                    autoConnectDeviceAddress = autoConnectDeviceAddress,
+                    autoConnect = autoConnect,
+                    saveFavoriteDevice = saveFavoriteDevice,
+                    unpairDevice = unpairDevice,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable { connectDevice(device.macAddress) }
-                        .padding(dimensionResource(id = R.dimen.padding_max))
+                        .padding(
+                            horizontal = dimensionResource(id = R.dimen.padding_max),
+                            vertical = dimensionResource(id = R.dimen.padding_small)
+                        )
                 )
             }
         }
@@ -332,7 +335,7 @@ private fun DevicesListView(
 
         if(nonFavoriteDevices.isNotEmpty()) {
             item {
-                TextNormalSecondary(
+                OpenKeyModSectionLabel(
                     text = stringResource(id = R.string.paired_devices),
                     modifier = Modifier
                         .fillMaxWidth()
@@ -342,22 +345,21 @@ private fun DevicesListView(
                         )
                 )
             }
-            items(nonFavoriteDevices) { device ->
-                DeviceItemView(
-                    name = device.name,
-                    macAddress = device.macAddress,
-                    icon = device.imageVector,
-                    isAutoConnectDeviceAddress = autoConnectDeviceAddress == device.macAddress,
-                    autoConnect = { autoConnect(InternalDevice(device.name, device.macAddress)) },
-                    isFavoriteDevice = false,
-                    onFavoriteDeviceChanged = {
-                        saveFavoriteDevice(device.macAddress)
-                    },
-                    unpair = { unpairDevice(InternalDevice(device.name, device.macAddress)) },
+            item {
+                DeviceListSection(
+                    devices = nonFavoriteDevices,
+                    isFavorite = false,
+                    connectDevice = connectDevice,
+                    autoConnectDeviceAddress = autoConnectDeviceAddress,
+                    autoConnect = autoConnect,
+                    saveFavoriteDevice = saveFavoriteDevice,
+                    unpairDevice = unpairDevice,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable { connectDevice(device.macAddress) }
-                        .padding(dimensionResource(id = R.dimen.padding_max))
+                        .padding(
+                            horizontal = dimensionResource(id = R.dimen.padding_max),
+                            vertical = dimensionResource(id = R.dimen.padding_small)
+                        )
                 )
             }
         }
@@ -379,42 +381,92 @@ private fun DevicesListView(
 }
 
 @Composable
+private fun DeviceListSection(
+    devices: List<DeviceEntity>,
+    isFavorite: Boolean,
+    connectDevice: (String) -> Unit,
+    autoConnectDeviceAddress: String,
+    autoConnect: (InternalDevice) -> Unit,
+    saveFavoriteDevice: (String) -> Unit,
+    unpairDevice: (InternalDevice) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    OkmGlassCard(
+        modifier = modifier,
+        shape = RoundedCornerShape(20.dp),
+        contentPadding = 0.dp
+    ) {
+        devices.forEachIndexed { index, device ->
+            DeviceItemView(
+                name = device.name,
+                macAddress = device.macAddress,
+                icon = device.imageVector,
+                isAutoConnectDeviceAddress = autoConnectDeviceAddress == device.macAddress,
+                autoConnect = { autoConnect(InternalDevice(device.name, device.macAddress)) },
+                isFavoriteDevice = isFavorite,
+                onFavoriteDeviceChanged = {
+                    saveFavoriteDevice(device.macAddress)
+                },
+                unpair = { unpairDevice(InternalDevice(device.name, device.macAddress)) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { connectDevice(device.macAddress) }
+                    .padding(
+                        horizontal = dimensionResource(id = R.dimen.padding_max),
+                        vertical = dimensionResource(id = R.dimen.padding_medium)
+                    )
+            )
+
+            if(index != devices.lastIndex) {
+                OkmGlassDivider(
+                    modifier = Modifier.padding(
+                        start = 72.dp,
+                        end = dimensionResource(id = R.dimen.padding_max)
+                    )
+                )
+            }
+        }
+    }
+}
+
+@Composable
 private fun InfoView(
     isBluetoothServiceRunning: Boolean,
     modifier: Modifier = Modifier
 ) {
-    DefaultElevatedCard(modifier = modifier) {
-        Column(
+    val palette = OkmGlass.palette()
+
+    DefaultElevatedCard(
+        modifier = modifier,
+        fill = palette.accent.copy(alpha = if(palette.dark) 0.10f else 0.07f)
+    ) {
+        Row(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(dimensionResource(id = R.dimen.padding_max)),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.Start
+                .fillMaxWidth()
+                .padding(horizontal = 14.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(bottom = dimensionResource(id = R.dimen.padding_medium)),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_normal))
-            ) {
-                Icon(
-                    imageVector = AppIcons.Info,
-                    contentDescription = stringResource(R.string.information)
-                )
-                TextMedium(
-                    text = stringResource(R.string.information),
-                    maxLines = 1
-                )
-            }
-            if(!isBluetoothServiceRunning) {
-                TextNormalSecondary(
-                    text = stringResource(R.string.help_info_hid_service_not_initialized_message),
-                    color = MaterialTheme.colorScheme.error
-                )
-            } else {
-                TextNormalSecondary(text = stringResource(R.string.help_info_message))
-            }
+            Icon(
+                imageVector = AppIcons.Info,
+                contentDescription = stringResource(R.string.information),
+                modifier = Modifier.size(18.dp),
+                tint = palette.accent
+            )
+            TextNormalSecondary(
+                text = if(!isBluetoothServiceRunning) {
+                    stringResource(R.string.help_info_hid_service_not_initialized_message)
+                } else {
+                    stringResource(R.string.help_info_message)
+                },
+                modifier = Modifier.weight(1f),
+                color = if(!isBluetoothServiceRunning) {
+                    MaterialTheme.colorScheme.error
+                } else {
+                    palette.secondaryText
+                },
+                maxLines = 2
+            )
         }
     }
 }

@@ -2,13 +2,16 @@ package com.atharok.btremote.common.utils
 
 import com.atharok.btremote.domain.entities.RemoteNavigationEntity
 import com.atharok.btremote.domain.entities.remoteInput.keyboard.KeyboardLanguage
+import com.atharok.btremote.domain.entities.settings.AccentColorEntity
 import com.atharok.btremote.domain.entities.settings.ThemeEntity
 
 const val NOTIFICATION_ID = 1
 const val NOTIFICATION_CHANNEL_ID = "notificationChannelId"
 
-const val SOURCE_CODE_LINK = "https://gitlab.com/Atharok/BtRemote"
-const val WEB_SITE_LINK = "https://atharok.gitlab.io/site/projects/bt-remote/"
+const val GITHUB_LINK = "https://github.com/sobanmujtaba"
+const val LINKEDIN_LINK = "https://www.linkedin.com/in/sobanmujtaba"
+const val SOURCE_CODE_LINK = GITHUB_LINK
+const val WEB_SITE_LINK = LINKEDIN_LINK
 
 const val DATA_STORE_PREFERENCES_SETTINGS_NAME = "dataStoreSettings"
 
@@ -16,6 +19,7 @@ const val DATA_STORE_PREFERENCES_SETTINGS_NAME = "dataStoreSettings"
 
 // ---- Appearance ----
 val DEFAULT_THEME = ThemeEntity.SYSTEM
+val DEFAULT_ACCENT_COLOR = AccentColorEntity.GRAPHITE
 const val DEFAULT_USE_BLACK_COLOR_FOR_DARK_THEME: Boolean = false
 const val DEFAULT_USE_FULL_SCREEN: Boolean = false
 
@@ -25,6 +29,7 @@ const val DEFAULT_MOUSE_SCROLL_SPEED: Float = 1f
 const val DEFAULT_SHOULD_INVERT_MOUSE_SCROLLING_DIRECTION: Boolean = false
 const val DEFAULT_USE_GYROSCOPE: Boolean = false
 const val TAP_DURATION_MAX: Long = 200L
+const val DOUBLE_TAP_DURATION_MAX: Long = 320L
 const val TAP_DRIFT_MAX_PX: Float = 5f
 
 // ---- Keyboard ----

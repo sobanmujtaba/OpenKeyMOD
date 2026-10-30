@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.atharok.btremote.domain.entities.RemoteNavigationEntity
 import com.atharok.btremote.domain.entities.remoteInput.PhysicalVolumeButtonAction
 import com.atharok.btremote.domain.entities.remoteInput.keyboard.KeyboardLanguage
+import com.atharok.btremote.domain.entities.settings.AccentColorEntity
 import com.atharok.btremote.domain.entities.settings.AppearanceSettings
 import com.atharok.btremote.domain.entities.settings.RemoteSettings
 import com.atharok.btremote.domain.entities.settings.ThemeEntity
@@ -22,6 +23,10 @@ class SettingsViewModel(
 
     fun changeTheme(newTheme: ThemeEntity) = viewModelScope.launch {
         useCase.saveTheme(newTheme)
+    }
+
+    fun setAccentColor(accentColor: AccentColorEntity) = viewModelScope.launch {
+        useCase.saveAccentColor(accentColor)
     }
 
     fun setUseDynamicColors(useDynamicColors: Boolean) = viewModelScope.launch {

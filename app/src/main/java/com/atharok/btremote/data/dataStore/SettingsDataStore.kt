@@ -8,6 +8,7 @@ import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.floatPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.atharok.btremote.common.extensions.dataStore
+import com.atharok.btremote.common.utils.DEFAULT_ACCENT_COLOR
 import com.atharok.btremote.common.utils.DEFAULT_KEYBOARD_LANGUAGE
 import com.atharok.btremote.common.utils.DEFAULT_MOUSE_SCROLL_SPEED
 import com.atharok.btremote.common.utils.DEFAULT_MOUSE_SPEED
@@ -27,6 +28,10 @@ import com.atharok.btremote.common.utils.isDynamicColorsAvailable
 import com.atharok.btremote.domain.entities.RemoteNavigationEntity
 import com.atharok.btremote.domain.entities.remoteInput.PhysicalVolumeButtonAction
 import com.atharok.btremote.domain.entities.remoteInput.keyboard.KeyboardLanguage
+import com.atharok.btremote.domain.entities.runbook.ShortcutHubDefaults
+import com.atharok.btremote.domain.entities.runbook.ShortcutProfile
+import com.atharok.btremote.domain.entities.runbook.ShortcutProfileCodec
+import com.atharok.btremote.domain.entities.settings.AccentColorEntity
 import com.atharok.btremote.domain.entities.settings.AppearanceSettings
 import com.atharok.btremote.domain.entities.settings.RemoteSettings
 import com.atharok.btremote.domain.entities.settings.ThemeEntity
@@ -40,6 +45,7 @@ class SettingsDataStore(private val context: Context) {
 
     companion object {
         private const val THEME_KEY = "theme_key"
+        private const val ACCENT_COLOR_KEY = "accent_color_key"
         private const val DYNAMIC_COLORS_KEY = "material_you_key"
         private const val BLACK_COLOR_KEY = "black_color_key"
         private const val FULL_SCREEN_KEY = "full_screen_key"
@@ -63,9 +69,11 @@ class SettingsDataStore(private val context: Context) {
         private const val AUTO_CONNECT_DEVICE_ADDRESS_KEY = "auto_connect_device_address_key"
         private const val SHOW_REMOTE_BUTTONS_IN_NOTIFICATION_KEY = "show_remote_buttons_in_notification_key"
         private const val HIDE_BLUETOOTH_ACTIVATION_BUTTON_KEY = "hide_bluetooth_activation_button_key"
+        private const val SHORTCUT_PROFILES_KEY = "shortcut_profiles_key"
     }
 
     private val themeKey = stringPreferencesKey(THEME_KEY)
+    private val accentColorKey = stringPreferencesKey(ACCENT_COLOR_KEY)
     private val useDynamicColorsKey = booleanPreferencesKey(DYNAMIC_COLORS_KEY)
     private val useBlackColorForDarkThemeKey = booleanPreferencesKey(BLACK_COLOR_KEY)
     private val useFullScreenKey = booleanPreferencesKey(FULL_SCREEN_KEY)
@@ -87,6 +95,7 @@ class SettingsDataStore(private val context: Context) {
     private val autoConnectDeviceAddressKey = stringPreferencesKey(AUTO_CONNECT_DEVICE_ADDRESS_KEY)
     private val showRemoteButtonsInNotificationKey = booleanPreferencesKey(SHOW_REMOTE_BUTTONS_IN_NOTIFICATION_KEY)
     private val hideBluetoothActivationButtonKey = booleanPreferencesKey(HIDE_BLUETOOTH_ACTIVATION_BUTTON_KEY)
+    private val shortcutProfilesKey = stringPreferencesKey(SHORTCUT_PROFILES_KEY)
 
     private fun Flow<Preferences>.catchException(): Flow<Preferences> = this.catch {
         if (it is IOException) {
@@ -108,7 +117,12 @@ class SettingsDataStore(private val context: Context) {
                 } catch (_: IllegalArgumentException) {
                     DEFAULT_THEME
                 },
-                useDynamicColors = preferences[useDynamicColorsKey] ?: isDynamicColorsAvailable(),
+                accentColor = try {
+                    AccentColorEntity.valueOf(preferences[accentColorKey] ?: DEFAULT_ACCENT_COLOR.name)
+                } catch (_: IllegalArgumentException) {
+                    DEFAULT_ACCENT_COLOR
+                },
+                useDynamicColors = preferences[useDynamicColorsKey] ?: false,
                 useBlackColorForDarkTheme = preferences[useBlackColorForDarkThemeKey] ?: DEFAULT_USE_BLACK_COLOR_FOR_DARK_THEME,
                 useFullScreen = preferences[useFullScreenKey] ?: DEFAULT_USE_FULL_SCREEN
             )
@@ -117,6 +131,12 @@ class SettingsDataStore(private val context: Context) {
     suspend fun saveTheme(themeEntity: ThemeEntity) {
         context.dataStore.edit {
             it[themeKey] = themeEntity.name
+        }
+    }
+
+    suspend fun saveAccentColor(accentColor: AccentColorEntity) {
+        context.dataStore.edit {
+            it[accentColorKey] = accentColor.name
         }
     }
 
@@ -331,6 +351,28 @@ class SettingsDataStore(private val context: Context) {
     suspend fun saveHideBluetoothActivationButton(hide: Boolean) {
         context.dataStore.edit {
             it[hideBluetoothActivationButtonKey] = hide
+        }
+    }
+
+    // ---- Shortcut Hub ----
+
+    val shortcutProfilesFlow: Flow<List<ShortcutProfile>> by lazy {
+        context.dataStore.data
+            .catchException()
+            .map { preferences ->
+                val jsonString = preferences[shortcutProfilesKey]
+                if (jsonString == null) {
+                    ShortcutHubDefaults.profiles()
+                } else {
+                    ShortcutProfileCodec.decode(jsonString) ?: ShortcutHubDefaults.profiles()
+                }
+            }
+    }
+
+    suspend fun saveShortcutProfiles(profiles: List<ShortcutProfile>) {
+        val jsonString = ShortcutProfileCodec.encode(profiles)
+        context.dataStore.edit {
+            it[shortcutProfilesKey] = jsonString
         }
     }
 }

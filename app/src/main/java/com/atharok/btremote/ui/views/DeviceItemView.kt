@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -25,7 +24,7 @@ import com.atharok.btremote.ui.components.MoreOverflowMenu
 import com.atharok.btremote.ui.components.TextMedium
 import com.atharok.btremote.ui.components.TextNormal
 import com.atharok.btremote.ui.components.TextNormalSecondary
-import com.atharok.btremote.ui.theme.surfaceElevationHigh
+import com.atharok.btremote.ui.theme.OkmGlass
 
 @Composable
 fun DeviceItemView(
@@ -39,14 +38,16 @@ fun DeviceItemView(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.padding_large))
     ) {
+        val palette = OkmGlass.palette()
+
         Image(
             imageVector = icon,
             contentDescription = "",
             modifier = Modifier
                 .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.primary)
+                .background(palette.accent.copy(alpha = 0.16f))
                 .padding(dimensionResource(id = R.dimen.padding_medium)),
-            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary)
+            colorFilter = ColorFilter.tint(palette.accent)
         )
 
         Column(
@@ -87,12 +88,15 @@ fun DeviceItemView(
         )
 
         if(isAutoConnectDeviceAddress) {
+            val palette = OkmGlass.palette()
+
             Surface(
                 modifier = Modifier.padding(
                     horizontal = dimensionResource(id = R.dimen.padding_small)
                 ),
                 shape = CircleShape,
-                tonalElevation = surfaceElevationHigh()
+                color = palette.accent.copy(alpha = 0.14f),
+                contentColor = palette.accent
             ) {
                 TextNormal(
                     text = stringResource(id = R.string.automatic_shorten),
@@ -100,6 +104,7 @@ fun DeviceItemView(
                         horizontal = dimensionResource(id = R.dimen.padding_max),
                         vertical = dimensionResource(id = R.dimen.padding_small)
                     ),
+                    color = palette.accent,
                     maxLines = 1
                 )
             }

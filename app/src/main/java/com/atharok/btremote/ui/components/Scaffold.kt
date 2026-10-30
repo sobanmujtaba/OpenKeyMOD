@@ -3,6 +3,7 @@ package com.atharok.btremote.ui.components
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
@@ -15,6 +16,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 fun AppScaffold(
     title: String,
     modifier: Modifier = Modifier,
+    subtitle: String? = null,
     navigateUp: @Composable () -> Unit = {},
     topBarActions: @Composable RowScope.() -> Unit = {},
     snackbarHost: @Composable () -> Unit = {},
@@ -24,6 +26,7 @@ fun AppScaffold(
     AppScaffold(
         title = title,
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        subtitle = subtitle,
         scrollBehavior = scrollBehavior,
         navigateUp = navigateUp,
         topBarActions = topBarActions,
@@ -37,6 +40,7 @@ fun AppScaffold(
 fun AppScaffold(
     title: String,
     modifier: Modifier = Modifier,
+    subtitle: String? = null,
     scrollBehavior: TopAppBarScrollBehavior? = null,
     navigateUp: @Composable () -> Unit = {},
     topBarActions: @Composable RowScope.() -> Unit = {},
@@ -45,9 +49,12 @@ fun AppScaffold(
 ) {
     Scaffold(
         modifier = modifier,
+        containerColor = androidx.compose.ui.graphics.Color.Transparent,
+        contentColor = MaterialTheme.colorScheme.onBackground,
         topBar = {
             TopBar(
                 title = title,
+                subtitle = subtitle,
                 navigateUp = navigateUp,
                 actions = topBarActions,
                 scrollBehavior = scrollBehavior

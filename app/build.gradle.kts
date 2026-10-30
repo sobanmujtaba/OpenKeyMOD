@@ -3,6 +3,7 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 val localProps = Properties().apply {
@@ -16,11 +17,11 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.atharok.btremote"
+        applicationId = "com.sobanmujtaba.openkeymod"
         minSdk = 28
         targetSdk = 36
         versionCode = 26
-        versionName = "1.12.1"
+        versionName = "1.12.1-openkeymod"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

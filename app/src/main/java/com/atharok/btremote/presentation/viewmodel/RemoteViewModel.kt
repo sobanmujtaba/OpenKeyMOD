@@ -7,6 +7,7 @@ import com.atharok.btremote.common.utils.KEYBOARD_REPORT_ID
 import com.atharok.btremote.common.utils.MOUSE_REPORT_ID
 import com.atharok.btremote.common.utils.REMOTE_REPORT_ID
 import com.atharok.btremote.domain.entities.remoteInput.MouseAction
+import com.atharok.btremote.domain.entities.remoteInput.keyboard.KeyboardKey
 import com.atharok.btremote.domain.entities.remoteInput.keyboard.SysadminMacro
 import com.atharok.btremote.domain.entities.remoteInput.keyboard.virtualKeyboard.VirtualKeyboardLayout
 import com.atharok.btremote.domain.entities.settings.RemoteSettings
@@ -49,6 +50,11 @@ class RemoteViewModel(
 
     // Keyboard
     val sendKeyboardReport: (ByteArray) -> Unit = { bytes -> sendReport(KEYBOARD_REPORT_ID, bytes) }
+
+    fun sendKey(key: KeyboardKey) {
+        sendKeyboardReport(byteArrayOf(0x00, key.byte))
+        sendKeyboardReport(byteArrayOf(0x00, 0x00))
+    }
 
     // Macro
     fun sendMacro(macro: SysadminMacro) {

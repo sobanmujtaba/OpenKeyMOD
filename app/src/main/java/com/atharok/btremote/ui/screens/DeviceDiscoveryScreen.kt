@@ -3,7 +3,6 @@ package com.atharok.btremote.ui.screens
 import android.bluetooth.BluetoothHidDevice
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -37,6 +36,7 @@ import com.atharok.btremote.ui.components.AppScaffold
 import com.atharok.btremote.ui.components.BasicIconButton
 import com.atharok.btremote.ui.components.HelpIconButton
 import com.atharok.btremote.ui.components.LoadingDialog
+import com.atharok.btremote.ui.components.OkmGlassCard
 import com.atharok.btremote.ui.components.NavigateUpIconButton
 import com.atharok.btremote.ui.components.SettingsIconButton
 import com.atharok.btremote.ui.components.TextNormalSecondary
@@ -246,15 +246,23 @@ private fun DiscoveredDevicesListView(
             }
         }
         items(devices) { device ->
-            DeviceItemView(
-                name = device.name,
-                macAddress = device.macAddress,
-                icon = device.imageVector,
+            OkmGlassCard(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable { connectToDevice(device.macAddress) }
-                    .padding(dimensionResource(id = R.dimen.padding_max))
-            )
+                    .padding(
+                        horizontal = dimensionResource(id = R.dimen.padding_max),
+                        vertical = dimensionResource(id = R.dimen.padding_small)
+                    ),
+                contentPadding = dimensionResource(id = R.dimen.padding_max),
+                onClick = { connectToDevice(device.macAddress) }
+            ) {
+                DeviceItemView(
+                    name = device.name,
+                    macAddress = device.macAddress,
+                    icon = device.imageVector,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
         }
     }
 }

@@ -1,6 +1,6 @@
-1.12.1
+OpenKeyMOD 1.12.1
 
-Full changelog here: https://gitlab.com/Atharok/BarcodeScanner/-/releases
-
-- Updated translations.
-- Updated dependencies.
+- New OpenKeyMOD icon and splash screen.
+- Refreshed glass-inspired interface with improved light and dark contrast.
+- Signed release and Play-ready build.
+- Updated About links and developer information.
