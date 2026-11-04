@@ -3,6 +3,7 @@ package com.atharok.btremote.presentation.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.atharok.btremote.common.utils.DELAY_BETWEEN_KEY_PRESSES_IN_MILLIS
+import com.atharok.btremote.common.utils.GAMEPAD_REPORT_ID
 import com.atharok.btremote.common.utils.KEYBOARD_REPORT_ID
 import com.atharok.btremote.common.utils.MOUSE_REPORT_ID
 import com.atharok.btremote.common.utils.REMOTE_REPORT_ID
@@ -47,6 +48,9 @@ class RemoteViewModel(
         val bytes: ByteArray = byteArrayOf(input.byte, xInt.toByte(), yInt.toByte(), wheel.roundToInt().toByte())
         sendReport(MOUSE_REPORT_ID, bytes)
     }
+
+    // Gamepad
+    val sendGamepadReport: (ByteArray) -> Unit = { bytes -> sendReport(GAMEPAD_REPORT_ID, bytes) }
 
     // Keyboard
     val sendKeyboardReport: (ByteArray) -> Unit = { bytes -> sendReport(KEYBOARD_REPORT_ID, bytes) }

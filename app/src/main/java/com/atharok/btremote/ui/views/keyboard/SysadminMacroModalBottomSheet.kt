@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import com.atharok.btremote.R
 import com.atharok.btremote.domain.entities.remoteInput.keyboard.KeyboardKey
 import com.atharok.btremote.domain.entities.remoteInput.keyboard.SysadminMacro
-import com.atharok.btremote.ui.components.OpenKeyModBottomSheet
+import com.atharok.btremote.ui.components.OpenKeyModFullScreen
 import com.atharok.btremote.ui.components.OpenKeyModCard
 import com.atharok.btremote.ui.components.OpenKeyModKeycap
 import com.atharok.btremote.ui.components.OpenKeyModSectionLabel
@@ -31,7 +31,7 @@ fun SysadminMacroModalBottomSheet(
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    OpenKeyModBottomSheet(
+    OpenKeyModFullScreen(
         onDismissRequest = onDismissRequest,
         modifier = modifier
     ) {

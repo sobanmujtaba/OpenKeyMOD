@@ -58,6 +58,7 @@ import com.atharok.btremote.ui.components.MoreOverflowMenu
 import com.atharok.btremote.ui.components.PhysicalVolumeButtonsHandler
 import com.atharok.btremote.ui.theme.surfaceElevationMedium
 import com.atharok.btremote.ui.views.RemoteScreenHelpModalBottomSheet
+import com.atharok.btremote.ui.views.gamepad.GamepadFullScreen
 import com.atharok.btremote.ui.views.keyboard.AdvancedKeyboard
 import com.atharok.btremote.ui.views.keyboard.AdvancedKeyboardModalBottomSheet
 import com.atharok.btremote.ui.views.keyboard.ComposeAndSendModalBottomSheet
@@ -109,6 +110,7 @@ fun RemoteScreen(
     var isSysadminMacroVisible: Boolean by rememberSaveable { mutableStateOf(false) }
     var isPresentationModeVisible: Boolean by rememberSaveable { mutableStateOf(false) }
     var isNumpadVisible: Boolean by rememberSaveable { mutableStateOf(false) }
+    var isGamepadVisible: Boolean by rememberSaveable { mutableStateOf(false) }
     var isShortcutHubVisible: Boolean by rememberSaveable { mutableStateOf(false) }
 
     // More Buttons
@@ -144,6 +146,7 @@ fun RemoteScreen(
                 onNumpadClick = { isNumpadVisible = true },
                 onSysadminMacroClick = { isSysadminMacroVisible = true },
                 onPresentationModeClick = { isPresentationModeVisible = true },
+                onGamepadClick = { isGamepadVisible = true },
                 isMoreButtonsVisible = isMoreButtonsVisible,
                 onMoreButtonsVisibleChanged = { isMoreButtonsVisible = it },
                 isHelpBottomSheetVisible = isHelpBottomSheetVisible,
@@ -240,6 +243,12 @@ fun RemoteScreen(
                     PresentationModeModalBottomSheet(
                         onSendKey = remoteViewModel::sendKey,
                         onDismissRequest = { isPresentationModeVisible = false }
+                    )
+                }
+                isGamepadVisible -> {
+                    GamepadFullScreen(
+                        onSendReport = remoteViewModel.sendGamepadReport,
+                        onDismissRequest = { isGamepadVisible = false }
                     )
                 }
                 isMoreButtonsVisible -> {
@@ -546,6 +555,7 @@ private fun TopBarActions(
     onNumpadClick: () -> Unit,
     onSysadminMacroClick: () -> Unit,
     onPresentationModeClick: () -> Unit,
+    onGamepadClick: () -> Unit,
     isMoreButtonsVisible: Boolean,
     onMoreButtonsVisibleChanged: (Boolean) -> Unit,
     isHelpBottomSheetVisible: Boolean,
@@ -655,6 +665,16 @@ private fun TopBarActions(
             onClick = {
                 closeDropdownMenu()
                 onPresentationModeClick()
+            }
+        )
+
+        // Gamepad
+        BasicDropdownMenuItem(
+            text = stringResource(id = R.string.okm_gamepad_title),
+            icon = AppIcons.Gamepad,
+            onClick = {
+                closeDropdownMenu()
+                onGamepadClick()
             }
         )
 

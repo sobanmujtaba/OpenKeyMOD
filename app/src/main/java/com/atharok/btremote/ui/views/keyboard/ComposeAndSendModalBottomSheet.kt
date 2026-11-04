@@ -6,6 +6,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
@@ -41,7 +44,7 @@ import com.atharok.btremote.domain.entities.remoteInput.keyboard.virtualKeyboard
 import com.atharok.btremote.domain.entities.runbook.RunbookSnippet
 import com.atharok.btremote.ui.components.OkmColors
 import com.atharok.btremote.ui.components.OkmTypography
-import com.atharok.btremote.ui.components.OpenKeyModBottomSheet
+import com.atharok.btremote.ui.components.OpenKeyModFullScreen
 import com.atharok.btremote.ui.components.OpenKeyModCard
 import com.atharok.btremote.ui.components.OpenKeyModPrimaryButton
 import com.atharok.btremote.ui.components.OpenKeyModSectionLabel
@@ -76,9 +79,9 @@ fun ComposeAndSendModalBottomSheet(
         15L to stringResource(id = R.string.okm_speed_fast)
     )
 
-    OpenKeyModBottomSheet(
+    OpenKeyModFullScreen(
         onDismissRequest = onDismissRequest,
-        windowInsets = WindowInsets.ime,
+        windowInsets = WindowInsets.safeDrawing.union(WindowInsets.ime),
         modifier = modifier
     ) {
         OpenKeyModSheetContent {

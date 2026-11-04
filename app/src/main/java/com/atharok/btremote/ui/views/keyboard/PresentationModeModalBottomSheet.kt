@@ -6,7 +6,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -21,6 +23,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -29,15 +32,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.atharok.btremote.R
+import com.atharok.btremote.common.utils.AppIcons
 import com.atharok.btremote.domain.entities.remoteInput.keyboard.KeyboardKey
 import com.atharok.btremote.ui.components.OkmColors
 import com.atharok.btremote.ui.components.OkmTypography
-import com.atharok.btremote.ui.components.OpenKeyModBottomSheet
+import com.atharok.btremote.ui.components.OpenKeyModFullScreen
 import com.atharok.btremote.ui.components.OpenKeyModCard
 import com.atharok.btremote.ui.components.OpenKeyModKeycap
 import com.atharok.btremote.ui.components.OpenKeyModSectionLabel
 import com.atharok.btremote.ui.components.OpenKeyModSheetContent
 import com.atharok.btremote.ui.components.OpenKeyModSheetHeader
+import com.atharok.btremote.ui.components.customButtons.SurfaceButton
 import kotlinx.coroutines.delay
 import java.util.Locale
 
@@ -69,7 +74,7 @@ fun PresentationModeModalBottomSheet(
         }
     }
 
-    OpenKeyModBottomSheet(
+    OpenKeyModFullScreen(
         onDismissRequest = onDismissRequest,
         modifier = modifier
     ) {
@@ -156,24 +161,21 @@ fun PresentationModeModalBottomSheet(
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
+                horizontalArrangement = Arrangement.spacedBy(28.dp, Alignment.CenterHorizontally),
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                OpenKeyModKeycap(
-                    label = "‹",
-                    caption = stringResource(id = R.string.okm_previous_slide),
+                SlideButton(
+                    icon = AppIcons.Left,
+                    contentDescription = stringResource(id = R.string.okm_previous_slide),
                     onClick = { onSendKey(KeyboardKey.KEY_PAGE_UP) },
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(92.dp)
+                    modifier = Modifier.size(96.dp)
                 )
-                OpenKeyModKeycap(
-                    label = "›",
-                    caption = stringResource(id = R.string.okm_next_slide),
+                SlideButton(
+                    icon = AppIcons.Right,
+                    contentDescription = stringResource(id = R.string.okm_next_slide),
                     accent = true,
                     onClick = { onSendKey(KeyboardKey.KEY_PAGE_DOWN) },
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(92.dp)
+                    modifier = Modifier.size(96.dp)
                 )
             }
 
@@ -220,6 +222,30 @@ fun PresentationModeModalBottomSheet(
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun SlideButton(
+    icon: ImageVector,
+    contentDescription: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    accent: Boolean = false
+) {
+    SurfaceButton(
+        touchDown = onClick,
+        touchUp = {},
+        modifier = modifier,
+        shape = CircleShape,
+        fill = if (accent) OkmColors.accent() else OkmColors.card()
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = contentDescription,
+            modifier = Modifier.size(38.dp),
+            tint = if (accent) Color.White else MaterialTheme.colorScheme.onSurface
+        )
     }
 }
 

@@ -369,6 +369,21 @@
     <string name="okm_last_key" translatable="false">Last key</string>
     <string name="okm_ready" translatable="false">Ready</string>
     <string name="okm_nothing_sent" translatable="false">Nothing sent yet</string>
+    <string name="okm_gamepad_title" translatable="false">Gamepad</string>
+    <string name="okm_gamepad_subtitle" translatable="false">A standard Bluetooth HID gamepad. Host support varies.</string>
+    <string name="okm_gamepad_stick_left" translatable="false">Left stick</string>
+    <string name="okm_gamepad_stick_right" translatable="false">Right stick</string>
+    <string name="okm_gamepad_select" translatable="false">Select</string>
+    <string name="okm_gamepad_start" translatable="false">Start</string>
+    <string name="okm_gamepad_lb" translatable="false">Left bumper</string>
+    <string name="okm_gamepad_rb" translatable="false">Right bumper</string>
+    <string name="okm_gamepad_lt" translatable="false">Left trigger</string>
+    <string name="okm_gamepad_rt" translatable="false">Right trigger</string>
+    <string name="okm_gamepad_edit" translatable="false">Edit layout</string>
+    <string name="okm_gamepad_done" translatable="false">Done</string>
+    <string name="okm_gamepad_reset" translatable="false">Reset</string>
+    <string name="okm_gamepad_edit_hint" translatable="false">Drag any control to move it.</string>
+    <string name="okm_gamepad_layout_hint" translatable="false">Controls scale to this screen.</string>
     <string name="okm_presentation_title" translatable="false">Presentation</string>
     <string name="okm_presentation_subtitle" translatable="false">Advance slides and keep your timing in view.</string>
     <string name="okm_timer" translatable="false">Timer</string>

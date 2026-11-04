@@ -11,26 +11,26 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Surface
 import androidx.compose.material3.SwitchColors
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,6 +44,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import com.atharok.btremote.R
 import com.atharok.btremote.common.utils.AppIcons
 import com.atharok.btremote.ui.theme.OkmGlass
@@ -149,39 +151,34 @@ object OkmTypography {
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OpenKeyModBottomSheet(
+fun OpenKeyModFullScreen(
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
-    windowInsets: WindowInsets = WindowInsets(0, 0, 0, 0),
+    windowInsets: WindowInsets = WindowInsets.safeDrawing,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    ModalBottomSheet(
+    Dialog(
         onDismissRequest = onDismissRequest,
-        modifier = modifier,
-        sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
-        containerColor = OkmColors.background(),
-        contentColor = MaterialTheme.colorScheme.onSurface,
-        contentWindowInsets = { windowInsets },
-        shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp),
-        scrimColor = OkmGlass.palette().scrim,
-        dragHandle = {
-            Box(
+        properties = DialogProperties(
+            usePlatformDefaultWidth = false,
+            decorFitsSystemWindows = false
+        )
+    ) {
+        Surface(
+            modifier = modifier.fillMaxSize(),
+            color = OkmColors.background(),
+            contentColor = MaterialTheme.colorScheme.onSurface
+        ) {
+            Column(
                 modifier = Modifier
-                    .padding(top = 10.dp, bottom = 6.dp)
-                    .size(width = 36.dp, height = 5.dp)
-                    .background(OkmColors.separator(), CircleShape)
+                    .fillMaxSize()
+                    .windowInsetsPadding(windowInsets)
+                    .padding(horizontal = 20.dp)
+                    .padding(top = 12.dp, bottom = 24.dp),
+                content = content
             )
         }
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp)
-                .padding(bottom = 24.dp),
-            content = content
-        )
     }
 }
 

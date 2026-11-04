@@ -20,8 +20,8 @@ android {
         applicationId = "com.sobanmujtaba.openkeymod"
         minSdk = 28
         targetSdk = 36
-        versionCode = 26
-        versionName = "1.12.1-openkeymod"
+        versionCode = 27
+        versionName = "1.12.2-openkeymod"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

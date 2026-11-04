@@ -52,7 +52,7 @@ import com.atharok.btremote.domain.entities.runbook.ShortcutProfile
 import com.atharok.btremote.domain.entities.runbook.ShortcutProfileCodec
 import com.atharok.btremote.ui.components.OkmColors
 import com.atharok.btremote.ui.components.OkmTypography
-import com.atharok.btremote.ui.components.OpenKeyModBottomSheet
+import com.atharok.btremote.ui.components.OpenKeyModFullScreen
 import com.atharok.btremote.ui.components.OpenKeyModCard
 import com.atharok.btremote.ui.components.OpenKeyModSectionLabel
 import com.atharok.btremote.ui.components.OpenKeyModSheetContent
@@ -90,7 +90,7 @@ fun ShortcutHubModalBottomSheet(
 
     val selectedProfile = profiles.firstOrNull { it.id == selectedProfileId }
 
-    OpenKeyModBottomSheet(
+    OpenKeyModFullScreen(
         onDismissRequest = onDismissRequest,
         modifier = modifier
     ) {

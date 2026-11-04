@@ -24,7 +24,7 @@ import com.atharok.btremote.R
 import com.atharok.btremote.domain.entities.remoteInput.keyboard.KeyboardKey
 import com.atharok.btremote.ui.components.OkmColors
 import com.atharok.btremote.ui.components.OkmTypography
-import com.atharok.btremote.ui.components.OpenKeyModBottomSheet
+import com.atharok.btremote.ui.components.OpenKeyModFullScreen
 import com.atharok.btremote.ui.components.OpenKeyModCard
 import com.atharok.btremote.ui.components.OpenKeyModKeycap
 import com.atharok.btremote.ui.components.OpenKeyModSectionLabel
@@ -48,7 +48,7 @@ fun NumpadModalBottomSheet(
         lastKeyLabel = label
     }
 
-    OpenKeyModBottomSheet(
+    OpenKeyModFullScreen(
         onDismissRequest = onDismissRequest,
         modifier = modifier
     ) {

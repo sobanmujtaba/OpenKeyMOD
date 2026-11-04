@@ -52,6 +52,7 @@ const val USE_MOUSE_NAVIGATION_BY_DEFAULT = true
 const val KEYBOARD_REPORT_ID = 0x01
 const val MOUSE_REPORT_ID = 0x02
 const val REMOTE_REPORT_ID = 0x03
+const val GAMEPAD_REPORT_ID = 0x04
 
 val REMOTE_INPUT_NONE = byteArrayOf(0x00, 0x00)
 
@@ -121,5 +122,30 @@ val bluetoothHidDescriptor = byteArrayOf(
     0x95.toByte(), 0x03.toByte(),                    //     Report Count (3)
     0x81.toByte(), 0x06.toByte(),                    //     Input (Data,Variable,Relative)
     0xC0.toByte(),                                   //   End Collection
+    0xC0.toByte(),                                   // End Collection
+
+    // Gamepad
+    0x05.toByte(), 0x01.toByte(),                    // Usage Page (Generic Desktop)
+    0x09.toByte(), 0x05.toByte(),                    // Usage (Game Pad)
+    0xA1.toByte(), 0x01.toByte(),                    // Collection (Application)
+    0x85.toByte(), GAMEPAD_REPORT_ID.toByte(),       //   Report ID (4)
+    0x05.toByte(), 0x09.toByte(),                    //   Usage Page (Button)
+    0x19.toByte(), 0x01.toByte(),                    //   Usage Minimum (1)
+    0x29.toByte(), 0x10.toByte(),                    //   Usage Maximum (16)
+    0x15.toByte(), 0x00.toByte(),                    //   Logical Minimum (0)
+    0x25.toByte(), 0x01.toByte(),                    //   Logical Maximum (1)
+    0x75.toByte(), 0x01.toByte(),                    //   Report Size (1)
+    0x95.toByte(), 0x10.toByte(),                    //   Report Count (16)
+    0x81.toByte(), 0x02.toByte(),                    //   Input (Data,Variable,Absolute)
+    0x05.toByte(), 0x01.toByte(),                    //   Usage Page (Generic Desktop)
+    0x09.toByte(), 0x30.toByte(),                    //   Usage (X)
+    0x09.toByte(), 0x31.toByte(),                    //   Usage (Y)
+    0x09.toByte(), 0x32.toByte(),                    //   Usage (Z)
+    0x09.toByte(), 0x35.toByte(),                    //   Usage (Rz)
+    0x15.toByte(), 0x00.toByte(),                    //   Logical Minimum (0)
+    0x26.toByte(), 0xFF.toByte(), 0x00.toByte(),     //   Logical Maximum (255)
+    0x75.toByte(), 0x08.toByte(),                    //   Report Size (8)
+    0x95.toByte(), 0x04.toByte(),                    //   Report Count (4)
+    0x81.toByte(), 0x02.toByte(),                    //   Input (Data,Variable,Absolute)
     0xC0.toByte()                                    // End Collection
 )

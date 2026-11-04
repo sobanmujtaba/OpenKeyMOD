@@ -69,6 +69,7 @@ import androidx.compose.material.icons.rounded.SkipNext
 import androidx.compose.material.icons.rounded.SkipPrevious
 import androidx.compose.material.icons.rounded.Smartphone
 import androidx.compose.material.icons.rounded.SpaceBar
+import androidx.compose.material.icons.rounded.SportsEsports
 import androidx.compose.material.icons.rounded.Stop
 import androidx.compose.material.icons.rounded.Toys
 import androidx.compose.material.icons.rounded.Usb
@@ -131,6 +132,7 @@ object AppIcons {
     val Round get() = Icons.Rounded.Circle
 
     val Controller get() = Icons.Rounded.ControlCamera
+    val Gamepad get() = Icons.Rounded.SportsEsports
     val Gesture get() = Icons.Rounded.OpenWith
     val Disconnect get() = Icons.Rounded.LinkOff
 
